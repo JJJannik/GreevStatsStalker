@@ -9,6 +9,6 @@ public class SlashCommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        Main.INTERACTIONS.get((event.getSubcommandGroup() == null ? "" : event.getSubcommandGroup() + " ") + event.getSubcommandName()).execute(event);
+        Main.INTERACTIONS.get(event.getFullCommandName()).execute(event);
     }
 }
