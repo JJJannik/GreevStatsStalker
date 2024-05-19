@@ -2,6 +2,61 @@ package de.jjjannik;
 
 import de.jjjannik.api.JGA;
 import de.jjjannik.interactions.Interaction;
+import de.jjjannik.interactions.commands.advent.AdventDayCommand;
+import de.jjjannik.interactions.commands.advent.AdventYearCommand;
+import de.jjjannik.interactions.commands.fastbridge.islands.FastbridgeIslandsPlayerCommand;
+import de.jjjannik.interactions.commands.fastbridge.islands.FastrbidgeIslandsTopCommand;
+import de.jjjannik.interactions.commands.fastbridge.mode.FastbridgeModePlayerCommand;
+import de.jjjannik.interactions.commands.fastbridge.mode.FastrbidgeModeTopCommand;
+import de.jjjannik.interactions.commands.general.*;
+import de.jjjannik.interactions.commands.general.clans.ClanDetailsCommand;
+import de.jjjannik.interactions.commands.general.clans.ClanMembersCommand;
+import de.jjjannik.interactions.commands.general.clans.ClanTopCommand;
+import de.jjjannik.interactions.commands.general.loginstreak.LoginstreakPlayerCommand;
+import de.jjjannik.interactions.commands.general.performance.PerfomanceTopCommand;
+import de.jjjannik.interactions.commands.general.performance.PerformancePlayerCommand;
+import de.jjjannik.interactions.commands.general.tokens.TokensTopCommand;
+import de.jjjannik.interactions.commands.knockpvp.*;
+import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabPlayerCommand;
+import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabRollingPlayerCommand;
+import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabRollingTopCommand;
+import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabTopCommand;
+import de.jjjannik.interactions.commands.minesweeper.*;
+import de.jjjannik.interactions.commands.minigames.bedwars.BedwarsPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.bedwars.BedwarsTopCommand;
+import de.jjjannik.interactions.commands.minigames.bow_spleef.BowSpleefPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.cores.CoresPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.cores.CoresTopCommand;
+import de.jjjannik.interactions.commands.minigames.jump_league.JumpLeaguePlayerCommand;
+import de.jjjannik.interactions.commands.minigames.jump_league.JumpLeagueTopCommand;
+import de.jjjannik.interactions.commands.minigames.knockffa.KnockFFAPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.knockffa.KnockFFATopCommand;
+import de.jjjannik.interactions.commands.minigames.one_vs_one.OneVsOnePlayerCommand;
+import de.jjjannik.interactions.commands.minigames.one_vs_one.OneVsOneTopCommand;
+import de.jjjannik.interactions.commands.minigames.oneline.OnelinePlayerCommand;
+import de.jjjannik.interactions.commands.minigames.oneline.OnelineTopCommand;
+import de.jjjannik.interactions.commands.minigames.qsg.QsgPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.qsg.QsgTopCommand;
+import de.jjjannik.interactions.commands.minigames.quake.QuakePlayerCommand;
+import de.jjjannik.interactions.commands.minigames.quake.QuakeTopCommand;
+import de.jjjannik.interactions.commands.minigames.rush.RushPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.rush.RushTopCommand;
+import de.jjjannik.interactions.commands.minigames.skywars.SkywarsPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.skywars.SkywarsTopCommand;
+import de.jjjannik.interactions.commands.minigames.snowball_fight.SnowballFightPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.snowball_fight.SnowballFightTopCommand;
+import de.jjjannik.interactions.commands.minigames.spleef.SpleefPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.spleef.SpleefTopCommand;
+import de.jjjannik.interactions.commands.minigames.sumo.SumoPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.sumo.SumoTopCommand;
+import de.jjjannik.interactions.commands.minigames.tnt_run.TNTRunPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.tnt_run.TNTRunTopCommand;
+import de.jjjannik.interactions.commands.minigames.uhc.UhcPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.uhc.UhcTopCommand;
+import de.jjjannik.interactions.commands.mlgrush.MLGRushPlayerCommand;
+import de.jjjannik.interactions.commands.mlgrush.MLGRushRollingPlayerCommand;
+import de.jjjannik.interactions.commands.mlgrush.MLGRushRollingTopCommand;
+import de.jjjannik.interactions.commands.mlgrush.MLGRushTopCommand;
 import de.jjjannik.listener.SlashCommandListener;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -74,15 +129,15 @@ public class Main {
         jda.updateCommands().addCommands(
                 Commands.slash("general", "Command for all general stats")
                         .addSubcommands(
-                                new SubcommandData("metadata", "Get all meta data from a player"),
-                                new SubcommandData("badges", "Get all badges off a player"),
-                                new SubcommandData("uuid", "Get player uuid by player name"),
-                                new SubcommandData("name", "Get player name by player uuid"),
-                                new SubcommandData("name-history", "Get namehistory of a player"),
+                                new SubcommandData("metadata", "Get all MetaData of player"),
+                                new SubcommandData("badges", "Get all Badges of player"),
+                                new SubcommandData("uuid", "Get player UUID of player"),
+                                new SubcommandData("name", "Get player Name of player"),
+                                new SubcommandData("name-history", "Get Namehistory of player"),
                                 new SubcommandData("all-player-stats", "Get all player stats combined")
                         )
                         .addSubcommandGroups(
-                                new SubcommandGroupData("playerperformance", "Get player Performance")
+                                new SubcommandGroupData("performance", "Get player Performance")
                                         .addSubcommands(
                                                 new SubcommandData("player", "Get player Performance of player"),
                                                 new SubcommandData("top", "Get top Performance players")
@@ -92,16 +147,16 @@ public class Main {
                                                 new SubcommandData("player", "Get Tokens of player"),
                                                 new SubcommandData("top", "Get top Tokens players")
                                         ),
-                                new SubcommandGroupData("loginstreak", "Get player Loginstreaks")
+                                new SubcommandGroupData("loginstreak", "Get player Loginstreak")
                                         .addSubcommands(
                                                 new SubcommandData("player", "Get the Loginstreak of player"),
                                                 new SubcommandData("top", "Get top Loginstreak players")
                                         ),
-                                new SubcommandGroupData("clans", "Get clan information")
+                                new SubcommandGroupData("clans", "Get Clan information")
                                         .addSubcommands(
-                                                new SubcommandData("details", "Get clan details"),
-                                                new SubcommandData("top", "Get top clans"),
-                                                new SubcommandData("members", "Get clan members")
+                                                new SubcommandData("details", "Get Clan details"),
+                                                new SubcommandData("top", "Get top Clans"),
+                                                new SubcommandData("members", "Get Clan members")
                                         )
                         ),
                 Commands.slash("minigame","Standardised minigame stats")
@@ -209,7 +264,7 @@ public class Main {
                                                 new SubcommandData("player", "Get Fastbridge Island stats of player"),
                                                 new SubcommandData("top", "Get top Fastbridge Island players")
                                         ),
-                                new SubcommandGroupData("fastbridge", "Get other Fastbridge mode stats")
+                                new SubcommandGroupData("mode", "Get other Fastbridge mode stats")
                                         .addSubcommands(
                                                 new SubcommandData("player", "Get Fastbridge mode stats of player"),
                                                 new SubcommandData("top", "Get top Fastbridge mode players")
@@ -230,7 +285,7 @@ public class Main {
                                 new SubcommandData("monthly", "Get monthly KnockPVP stats of player"),
                                 new SubcommandData("weekly", "Get weekly KnockPVP stats of player"),
                                 new SubcommandData("daily", "Get daily KnockPVP stats of player"),
-                                new SubcommandData("days", "Get KnockPVP stats of player of last days")
+                                new SubcommandData("days", "Get KnockPVP stats of player of last N days")
                         ),
                 Commands.slash("knockpvp-lab", "Get KnockPVP-Lab stats from experiment")
                         .addSubcommands(
@@ -240,6 +295,117 @@ public class Main {
                                 new SubcommandData("rolling-player", "Get rolling KnockPVP-Lab stats of player")
                         )
         ).queue();
+
+        // Commands registry
+
+        registerInteraction("general metadata", new MetaDataCommand());
+        registerInteraction("general badges", new BadgesCommand());
+        registerInteraction("general uuid", new UUIDCommand());
+        registerInteraction("general name", new NameCommand());
+        registerInteraction("general name-history", new NamehistoryCommand());
+        registerInteraction("general all-player-stats", new AllPlayerStatsCommand());
+
+        registerInteraction("general performance player", new PerformancePlayerCommand());
+        registerInteraction("general performance top", new PerfomanceTopCommand());
+
+        registerInteraction("general tokens player", new TokensTopCommand());
+        registerInteraction("general tokens top", new TokensTopCommand());
+
+        registerInteraction("general loginstreak player", new LoginstreakPlayerCommand());
+        registerInteraction("general loginstreak top", new LoginstreakPlayerCommand());
+
+        registerInteraction("general clans details", new ClanDetailsCommand());
+        registerInteraction("general clans top", new ClanTopCommand());
+        registerInteraction("general clans members", new ClanMembersCommand());
+
+
+        registerInteraction("minigame bedwars player", new BedwarsPlayerCommand());
+        registerInteraction("minigame bedwars top", new BedwarsTopCommand());
+
+        registerInteraction("minigame bow-spleef player", new BowSpleefPlayerCommand());
+        registerInteraction("minigame bow-spleef top", new BedwarsTopCommand());
+
+        registerInteraction("minigame cores player", new CoresPlayerCommand());
+        registerInteraction("minigame cores top", new CoresTopCommand());
+
+        registerInteraction("minigame jump-league player", new JumpLeaguePlayerCommand());
+        registerInteraction("minigame jump-league top", new JumpLeagueTopCommand());
+
+        registerInteraction("minigame knockffa player", new KnockFFAPlayerCommand());
+        registerInteraction("minigame knockffa top", new KnockFFATopCommand());
+
+        registerInteraction("minigame oneline player", new OnelinePlayerCommand());
+        registerInteraction("minigame oneline top", new OnelineTopCommand());
+
+        registerInteraction("minigame 1vs1 player", new OneVsOnePlayerCommand());
+        registerInteraction("minigame 1vs1 top", new OneVsOneTopCommand());
+
+        registerInteraction("minigame qsg player", new QsgPlayerCommand());
+        registerInteraction("minigame qsg top", new QsgTopCommand());
+
+        registerInteraction("minigame quake player", new QuakePlayerCommand());
+        registerInteraction("minigame quake top", new QuakeTopCommand());
+
+        registerInteraction("minigame rush player", new RushPlayerCommand());
+        registerInteraction("minigame rush top", new RushTopCommand());
+
+        registerInteraction("minigame skywars player", new SkywarsPlayerCommand());
+        registerInteraction("minigame skywars top", new SkywarsTopCommand());
+
+        registerInteraction("minigame snowball-fight player", new SnowballFightPlayerCommand());
+        registerInteraction("minigame snowball-fight top", new SnowballFightTopCommand());
+
+        registerInteraction("minigame spleef player", new SpleefPlayerCommand());
+        registerInteraction("minigame spleef top", new SpleefTopCommand());
+
+        registerInteraction("minigame sumo player", new SumoPlayerCommand());
+        registerInteraction("minigame sumo top", new SumoTopCommand());
+
+        registerInteraction("minigame tnt-run player", new TNTRunPlayerCommand());
+        registerInteraction("minigame tnt-run top", new TNTRunTopCommand());
+
+        registerInteraction("minigame uhc player", new UhcPlayerCommand());
+        registerInteraction("minigame uhc top", new UhcTopCommand());
+
+
+        registerInteraction("minesweeper player", new MinesweeperPlayerCommand());
+        registerInteraction("minesweeper top", new MinesweeperTopCommand());
+        registerInteraction("minesweeper best", new MinesweeperBestCommand());
+        registerInteraction("minesweeper best-filtered", new MinesweeperBestFilteredCommand());
+        registerInteraction("minesweeper game", new MinesweeperGameCommand());
+
+
+        registerInteraction("mlgrush top", new MLGRushTopCommand());
+        registerInteraction("mlgrush rolling-top", new MLGRushRollingTopCommand());
+        registerInteraction("mlgrush player", new MLGRushPlayerCommand());
+        registerInteraction("mlgrush rolling-player", new MLGRushRollingPlayerCommand());
+
+
+        registerInteraction("fastbridge islands player", new FastbridgeIslandsPlayerCommand());
+        registerInteraction("fastbridge islands top", new FastrbidgeIslandsTopCommand());
+        registerInteraction("fastbridge mode player", new FastbridgeModePlayerCommand());
+        registerInteraction("fastbridge mode top", new FastrbidgeModeTopCommand());
+
+
+        registerInteraction("advent year", new AdventYearCommand());
+        registerInteraction("advent day", new AdventDayCommand());
+
+
+        registerInteraction("knockpvp top", new KnockPVPTopCommand());
+        registerInteraction("knockpvp rolling-top", new KnockPVPRollingTopCommand());
+        registerInteraction("knockpvp player", new KnockPVPPlayerCommand());
+        registerInteraction("knockpvp rolling-player", new KnockPVPRollingPlayerCommand());
+        registerInteraction("knockpvp yearly", new KnockPVPYearlyCommand());
+        registerInteraction("knockpvp monthly", new KnockPVPMonthlyCommand());
+        registerInteraction("knockpvp weekly", new KnockPVPWeeklyCommand());
+        registerInteraction("knockpvp daily", new KnockPVPDailyCommand());
+        registerInteraction("knockpvp days", new KnockPVPDaysCommand());
+
+
+        registerInteraction("knockpvp-lab top", new KnockLabTopCommand());
+        registerInteraction("knockpvp-lab rolling-top", new KnockLabRollingTopCommand());
+        registerInteraction("knockpvp-lab player", new KnockLabPlayerCommand());
+        registerInteraction("knockpvp-lab rolling-player", new KnockLabRollingPlayerCommand());
 
         log.info("Started: {}", OffsetDateTime.now(ZoneId.systemDefault()));
     }

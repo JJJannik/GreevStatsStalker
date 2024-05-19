@@ -1,7 +1,7 @@
 package de.jjjannik.interactions;
 
-import net.dv8tion.jda.api.events.Event;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public interface Interaction {
-    void execute(Event evt);
+    void execute(SlashCommandInteractionEvent evt);
 }
