@@ -3,6 +3,7 @@ package de.jjjannik;
 import de.jjjannik.api.JGA;
 import de.jjjannik.interactions.Interaction;
 import de.jjjannik.interactions.commands.advent.AdventDayCommand;
+import de.jjjannik.interactions.commands.advent.AdventTopCommand;
 import de.jjjannik.interactions.commands.advent.AdventYearCommand;
 import de.jjjannik.interactions.commands.fastbridge.islands.FastbridgeIslandsPlayerCommand;
 import de.jjjannik.interactions.commands.fastbridge.islands.FastrbidgeIslandsTopCommand;
@@ -65,7 +66,11 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.Command.*;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -124,38 +129,62 @@ public class Main {
         jga = JGAInitializer.getJGA();
 
         jda.awaitReady();
-
         jda.addEventListener(new SlashCommandListener());
+
+        OptionData uuidOption = new OptionData(OptionType.STRING, "uuid", "The uuid of the player", true);
+        OptionData nameOption = new OptionData(OptionType.STRING, "name", "The name of the player", true);
+        OptionData[] topOption = {
+                new OptionData(OptionType.INTEGER, "amount", "Amount of data to return", true),
+                new OptionData(OptionType.INTEGER, "offset", "Offset of when data should begin", true)
+        };
+        OptionData[] rollingOption = {
+                new OptionData(OptionType.INTEGER, "start-timestamp", "Timestamp as start of tracked data", true),
+                new OptionData(OptionType.INTEGER, "end-timestamp", "Timestamp as end of tracked data", true)
+        };
+
         jda.updateCommands().addCommands(
                 Commands.slash("general", "Command for all general stats")
                         .addSubcommands(
-                                new SubcommandData("metadata", "Get all MetaData of player"),
-                                new SubcommandData("badges", "Get all Badges of player"),
-                                new SubcommandData("uuid", "Get player UUID of player"),
-                                new SubcommandData("name", "Get player Name of player"),
-                                new SubcommandData("name-history", "Get Namehistory of player"),
+                                new SubcommandData("metadata", "Get all MetaData of player")
+                                        .addOptions(uuidOption),
+                                new SubcommandData("badges", "Get all Badges of player")
+                                        .addOptions(uuidOption),
+                                new SubcommandData("uuid", "Get player UUID of player")
+                                        .addOptions(nameOption),
+                                new SubcommandData("name", "Get player Name of player")
+                                        .addOptions(uuidOption),
+                                new SubcommandData("name-history", "Get Namehistory of player")
+                                        .addOptions(uuidOption),
                                 new SubcommandData("all-player-stats", "Get all player stats combined")
+                                        .addOptions(uuidOption)
                         )
                         .addSubcommandGroups(
                                 new SubcommandGroupData("performance", "Get player Performance")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get player Performance of player"),
+                                                new SubcommandData("player", "Get player Performance of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Performance players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("tokens", "Get player Tokens")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Tokens of player"),
+                                                new SubcommandData("player", "Get Tokens of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Tokens players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("loginstreak", "Get player Loginstreak")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get the Loginstreak of player"),
+                                                new SubcommandData("player", "Get the Loginstreak of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Loginstreak players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("clans", "Get Clan information")
                                         .addSubcommands(
                                                 new SubcommandData("details", "Get Clan details"),
-                                                new SubcommandData("top", "Get top Clans"),
+                                                new SubcommandData("top", "Get top Clans")
+                                                        .addOptions(topOption),
                                                 new SubcommandData("members", "Get Clan members")
                                         )
                         ),
@@ -163,87 +192,119 @@ public class Main {
                         .addSubcommandGroups(
                                 new SubcommandGroupData("bedwars", "Get Bedwars stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Bedwars stats of player"),
+                                                new SubcommandData("player", "Get Bedwars stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Bedwars players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("bow-spleef", "Get BowSpleef stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get BowSpleef stats of player"),
+                                                new SubcommandData("player", "Get BowSpleef stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top BowSpleef players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("cores", "Get Cores stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Cores stats of player"),
+                                                new SubcommandData("player", "Get Cores stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Cores players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("jump-league", "Get JumpLeague stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get JumpLeague stats of player"),
+                                                new SubcommandData("player", "Get JumpLeague stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top JumpLeague players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("knockffa", "Get KnockFFA stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get KnockFFA stats of player"),
+                                                new SubcommandData("player", "Get KnockFFA stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top KnockFFA players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("oneline", "Get Oneline stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Oneline stats of player"),
+                                                new SubcommandData("player", "Get Oneline stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Oneline players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("1vs1", "Get 1vs1 stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get 1vs1 stats of player"),
+                                                new SubcommandData("player", "Get 1vs1 stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top 1vs1 players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("qsg", "Get QSG stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get QSG stats of player"),
+                                                new SubcommandData("player", "Get QSG stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top QSG players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("quake", "Get Quake stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Quake stats of player"),
+                                                new SubcommandData("player", "Get Quake stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Quake players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("rush", "Get Rush stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Rush stats of player"),
+                                                new SubcommandData("player", "Get Rush stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Rush players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("skywars", "Get Skywars stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Skywars stats of player"),
+                                                new SubcommandData("player", "Get Skywars stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Skywars players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("snowball-fight", "Get SnowballFight stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get SnowballFight stats of player"),
+                                                new SubcommandData("player", "Get SnowballFight stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top SnowballFight players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("spleef", "Get Spleef stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Spleef stats of player"),
+                                                new SubcommandData("player", "Get Spleef stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Spleef players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("sumo", "Get Sumo stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Sumo stats of player"),
+                                                new SubcommandData("player", "Get Sumo stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top Sumo players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("tnt-run", "Get TNTRun stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get TNTRun stats of player"),
+                                                new SubcommandData("player", "Get TNTRun stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top TNTRun players")
+                                                        .addOptions(topOption)
                                         ),
                                 new SubcommandGroupData("uhc", "Get UHC stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get UHC stats of player"),
+                                                new SubcommandData("player", "Get UHC stats of player")
+                                                        .addOptions(uuidOption),
                                                 new SubcommandData("top", "Get top UHC players")
+                                                        .addOptions(topOption)
                                         )
                         ),
                 Commands.slash("minesweeper", "Get Minesweeper stats")
-                        .addSubcommands(
+                        .addSubcommands( //TODO: add options
                                 new SubcommandData("top", "Get top Minesweeper player"),
                                 new SubcommandData("player", "Get Minesweeper stats of player"),
                                 new SubcommandData("best", "Get best Minesweeper stats of player"),
@@ -252,47 +313,115 @@ public class Main {
                         ),
                 Commands.slash("mlgrush", "Get MLGRush stats")
                         .addSubcommands(
-                                new SubcommandData("top", "Get top MLGRush players"),
-                                new SubcommandData("rolling-top", "Get top rolling MLGRush players"),
-                                new SubcommandData("player", "Get MLGRush stats of player"),
+                                new SubcommandData("top", "Get top MLGRush players")
+                                        .addOptions(topOption),
+                                new SubcommandData("rolling-top", "Get top rolling MLGRush players")
+                                        .addOptions(topOption)
+                                        .addOptions(rollingOption),
+                                new SubcommandData("player", "Get MLGRush stats of player")
+                                        .addOptions(uuidOption),
                                 new SubcommandData("rolling-player", "Get rolling MLGRush stats of player")
+                                        .addOptions(uuidOption)
+                                        .addOptions(rollingOption)
                         ),
                 Commands.slash("fastbridge", "Get Fastbridge stats")
                         .addSubcommandGroups(
                                 new SubcommandGroupData("islands", "Get Fastbridge Island stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Fastbridge Island stats of player"),
+                                                new SubcommandData("player", "Get Fastbridge Island stats of player")
+                                                        .addOptions(uuidOption)
+                                                        .addOptions(new OptionData(OptionType.STRING, "map", "The Fastbridge map to get the data for").addChoices(
+                                                                new Choice("Cubes", "CUBES"),
+                                                                new Choice("Rails", "RAILS"),
+                                                                new Choice("Street", "STREET"),
+                                                                new Choice("Coral", "CORAL"),
+                                                                new Choice("Athen", "ATHEN")
+                                                        )),
                                                 new SubcommandData("top", "Get top Fastbridge Island players")
+                                                        .addOptions(topOption[0].setRequired(false), topOption[1].setRequired(false))
+                                                        .addOptions(uuidOption)
+                                                        .addOptions(new OptionData(OptionType.STRING, "map", "The Fastbridge map to get the data for").addChoices(
+                                                                new Choice("Cubes", "CUBES"),
+                                                                new Choice("Rails", "RAILS"),
+                                                                new Choice("Street", "STREET"),
+                                                                new Choice("Coral", "CORAL"),
+                                                                new Choice("Athen", "ATHEN")
+                                                        ))
                                         ),
                                 new SubcommandGroupData("mode", "Get other Fastbridge mode stats")
                                         .addSubcommands(
-                                                new SubcommandData("player", "Get Fastbridge mode stats of player"),
+                                                new SubcommandData("player", "Get Fastbridge mode stats of player")
+                                                        .addOptions(uuidOption)
+                                                        .addOptions(new OptionData(OptionType.STRING, "mode", "The Fastbridge mode to get the data for").addChoices(
+                                                                new Choice("Inclined", "0"),
+                                                                new Choice("Inclined Short", "1"),
+                                                                new Choice("Normal", "2"),
+                                                                new Choice("Short", "3"),
+                                                                new Choice("Extra Short", "4"),
+                                                                new Choice("Staircase", "5")
+                                                        )),
                                                 new SubcommandData("top", "Get top Fastbridge mode players")
+                                                        .addOptions(topOption)
+                                                        .addOptions(new OptionData(OptionType.STRING, "mode", "The Fastbridge mode to get the data for").addChoices(
+                                                                new Choice("Inclined", "0"),
+                                                                new Choice("Inclined Short", "1"),
+                                                                new Choice("Normal", "2"),
+                                                                new Choice("Short", "3"),
+                                                                new Choice("Extra Short", "4"),
+                                                                new Choice("Staircase", "5")
+                                                        ))
                                         )
                         ),
                 Commands.slash("advent", "Get Advent Jump and Run stats")
                         .addSubcommands(
-                                new SubcommandData("year", "Get Advent Jump&Run times of player of year"),
+                                new SubcommandData("top", "Get top Advent Jump&Run times of day")
+                                        .addOptions(topOption[0].setRequired(false), topOption[1].setRequired(false))
+                                        .addOption(OptionType.INTEGER, "day", "Day 1-24 of advent")
+                                        .addOption(OptionType.INTEGER, "year", "Year of the advent"),
+                                new SubcommandData("year", "Get Advent Jump&Run times of player of year")
+                                        .addOptions(uuidOption)
+                                        .addOption(OptionType.INTEGER, "day", "Day 1-24 of advent")
+                                        .addOption(OptionType.INTEGER, "year", "Year of the advent"),
                                 new SubcommandData("day", "Get Advent Jump&Run times of player of day")
+                                        .addOptions(uuidOption)
+                                        .addOption(OptionType.INTEGER, "day", "Day 1-24 of advent")
                         ),
                 Commands.slash("knockpvp", "Get KnockPVP stats")
-                        .addSubcommands(
-                                new SubcommandData("top", "Get top KnockPVP players"),
-                                new SubcommandData("rolling-top", "Get top rolling KnockPVP players"),
-                                new SubcommandData("player", "Get KnockPVP stats of player"),
-                                new SubcommandData("rolling-player", "Get rolling KnockPVP stats of player"),
-                                new SubcommandData("yearly", "Get yearly KnockPVP stats of player"),
-                                new SubcommandData("monthly", "Get monthly KnockPVP stats of player"),
-                                new SubcommandData("weekly", "Get weekly KnockPVP stats of player"),
-                                new SubcommandData("daily", "Get daily KnockPVP stats of player"),
+                        .addSubcommands( //TODO: add name as not required option
+                                new SubcommandData("top", "Get top KnockPVP players")
+                                        .addOptions(topOption),
+                                new SubcommandData("rolling-top", "Get top rolling KnockPVP players")
+                                        .addOptions(topOption)
+                                        .addOptions(rollingOption),
+                                new SubcommandData("player", "Get KnockPVP stats of player")
+                                        .addOptions(uuidOption),
+                                new SubcommandData("rolling-player", "Get rolling KnockPVP stats of player")
+                                        .addOptions(uuidOption)
+                                        .addOptions(rollingOption),
+                                new SubcommandData("yearly", "Get yearly KnockPVP stats of player")
+                                        .addOptions(uuidOption),
+                                new SubcommandData("monthly", "Get monthly KnockPVP stats of player")
+                                        .addOptions(uuidOption),
+                                new SubcommandData("weekly", "Get weekly KnockPVP stats of player")
+                                        .addOptions(uuidOption),
+                                new SubcommandData("daily", "Get daily KnockPVP stats of player")
+                                        .addOptions(uuidOption),
                                 new SubcommandData("days", "Get KnockPVP stats of player of last N days")
+                                        .addOptions(uuidOption)
+                                        .addOption(OptionType.INTEGER, "days", "Number of last days to return data from", true)
                         ),
                 Commands.slash("knockpvp-lab", "Get KnockPVP-Lab stats from experiment")
                         .addSubcommands(
-                                new SubcommandData("top", "Get top KnockPVP-Lab players"),
-                                new SubcommandData("rolling-top", "Get top rolling KnockPVP-Lab players"),
-                                new SubcommandData("player", "Get KnockPVP-Lab stats of player"),
+                                new SubcommandData("top", "Get top KnockPVP-Lab players")
+                                        .addOptions(topOption),
+                                new SubcommandData("rolling-top", "Get top rolling KnockPVP-Lab players")
+                                        .addOptions(topOption)
+                                        .addOptions(rollingOption),
+                                new SubcommandData("player", "Get KnockPVP-Lab stats of player")
+                                        .addOptions(uuidOption),
                                 new SubcommandData("rolling-player", "Get rolling KnockPVP-Lab stats of player")
+                                        .addOptions(uuidOption)
+                                        .addOptions(rollingOption)
                         )
         ).queue();
 
@@ -317,7 +446,6 @@ public class Main {
         registerInteraction("general clans details", new ClanDetailsCommand());
         registerInteraction("general clans top", new ClanTopCommand());
         registerInteraction("general clans members", new ClanMembersCommand());
-
 
         registerInteraction("minigame bedwars player", new BedwarsPlayerCommand());
         registerInteraction("minigame bedwars top", new BedwarsTopCommand());
@@ -367,29 +495,25 @@ public class Main {
         registerInteraction("minigame uhc player", new UhcPlayerCommand());
         registerInteraction("minigame uhc top", new UhcTopCommand());
 
-
         registerInteraction("minesweeper player", new MinesweeperPlayerCommand());
         registerInteraction("minesweeper top", new MinesweeperTopCommand());
         registerInteraction("minesweeper best", new MinesweeperBestCommand());
         registerInteraction("minesweeper best-filtered", new MinesweeperBestFilteredCommand());
         registerInteraction("minesweeper game", new MinesweeperGameCommand());
 
-
         registerInteraction("mlgrush top", new MLGRushTopCommand());
         registerInteraction("mlgrush rolling-top", new MLGRushRollingTopCommand());
         registerInteraction("mlgrush player", new MLGRushPlayerCommand());
         registerInteraction("mlgrush rolling-player", new MLGRushRollingPlayerCommand());
-
 
         registerInteraction("fastbridge islands player", new FastbridgeIslandsPlayerCommand());
         registerInteraction("fastbridge islands top", new FastrbidgeIslandsTopCommand());
         registerInteraction("fastbridge mode player", new FastbridgeModePlayerCommand());
         registerInteraction("fastbridge mode top", new FastrbidgeModeTopCommand());
 
-
         registerInteraction("advent year", new AdventYearCommand());
         registerInteraction("advent day", new AdventDayCommand());
-
+        registerInteraction("advent top", new AdventTopCommand());
 
         registerInteraction("knockpvp top", new KnockPVPTopCommand());
         registerInteraction("knockpvp rolling-top", new KnockPVPRollingTopCommand());
