@@ -14,8 +14,10 @@ import de.jjjannik.interactions.commands.general.clans.ClanDetailsCommand;
 import de.jjjannik.interactions.commands.general.clans.ClanMembersCommand;
 import de.jjjannik.interactions.commands.general.clans.ClanTopCommand;
 import de.jjjannik.interactions.commands.general.loginstreak.LoginstreakPlayerCommand;
+import de.jjjannik.interactions.commands.general.loginstreak.LoginstreakTopCommand;
 import de.jjjannik.interactions.commands.general.performance.PerfomanceTopCommand;
 import de.jjjannik.interactions.commands.general.performance.PerformancePlayerCommand;
+import de.jjjannik.interactions.commands.general.tokens.TokensPlayerCommand;
 import de.jjjannik.interactions.commands.general.tokens.TokensTopCommand;
 import de.jjjannik.interactions.commands.knockpvp.*;
 import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabPlayerCommand;
@@ -26,6 +28,7 @@ import de.jjjannik.interactions.commands.minesweeper.*;
 import de.jjjannik.interactions.commands.minigames.bedwars.BedwarsPlayerCommand;
 import de.jjjannik.interactions.commands.minigames.bedwars.BedwarsTopCommand;
 import de.jjjannik.interactions.commands.minigames.bow_spleef.BowSpleefPlayerCommand;
+import de.jjjannik.interactions.commands.minigames.bow_spleef.BowSpleefTopCommand;
 import de.jjjannik.interactions.commands.minigames.cores.CoresPlayerCommand;
 import de.jjjannik.interactions.commands.minigames.cores.CoresTopCommand;
 import de.jjjannik.interactions.commands.minigames.jump_league.JumpLeaguePlayerCommand;
@@ -494,11 +497,11 @@ public class Main {
         registerInteraction("general performance player", new PerformancePlayerCommand());
         registerInteraction("general performance top", new PerfomanceTopCommand());
 
-        registerInteraction("general tokens player", new TokensTopCommand());
+        registerInteraction("general tokens player", new TokensPlayerCommand());
         registerInteraction("general tokens top", new TokensTopCommand());
 
         registerInteraction("general loginstreak player", new LoginstreakPlayerCommand());
-        registerInteraction("general loginstreak top", new LoginstreakPlayerCommand());
+        registerInteraction("general loginstreak top", new LoginstreakTopCommand());
 
         registerInteraction("general clans details", new ClanDetailsCommand());
         registerInteraction("general clans top", new ClanTopCommand());
@@ -508,7 +511,7 @@ public class Main {
         registerInteraction("minigame bedwars top", new BedwarsTopCommand());
 
         registerInteraction("minigame bow-spleef player", new BowSpleefPlayerCommand());
-        registerInteraction("minigame bow-spleef top", new BedwarsTopCommand());
+        registerInteraction("minigame bow-spleef top", new BowSpleefTopCommand());
 
         registerInteraction("minigame cores player", new CoresPlayerCommand());
         registerInteraction("minigame cores top", new CoresTopCommand());
@@ -581,7 +584,6 @@ public class Main {
         registerInteraction("knockpvp weekly", new KnockPVPWeeklyCommand());
         registerInteraction("knockpvp daily", new KnockPVPDailyCommand());
         registerInteraction("knockpvp days", new KnockPVPDaysCommand());
-
 
         registerInteraction("knockpvp-lab top", new KnockLabTopCommand());
         registerInteraction("knockpvp-lab rolling-top", new KnockLabRollingTopCommand());

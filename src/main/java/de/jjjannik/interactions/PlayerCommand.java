@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public abstract class PlayerCommand implements Interaction {
     private final Pattern uuidRegex = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+    protected final DecimalFormat decimalFormat = new DecimalFormat("#.##");
     protected final JGA jga = Main.getJga();
 
     protected void handlePlayerCommand(SlashCommandInteractionEvent evt, Consumer<Player> playerConsumer) {
