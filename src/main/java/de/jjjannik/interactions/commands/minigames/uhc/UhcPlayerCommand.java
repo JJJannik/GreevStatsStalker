@@ -18,10 +18,10 @@ public class UhcPlayerCommand extends PlayerCommand {
                             .setTitle("UHC stats of " + player.getName())
                             .addField("Kills", String.valueOf(stats.getKills()), true)
                             .addField("Deaths", String.valueOf(stats.getDeaths()), true)
-                            .addField("K/D", decimalFormat.format(stats.getKills() * 1D / stats.getDeaths()), true)
+                            .addField("K/D", TWO_DECIMALS.format(stats.getKills() * 1D / stats.getDeaths()), true)
                             .addField("Wins", String.valueOf(stats.getWins()), true)
                             .addField("Loses", String.valueOf(stats.getLoses()), true)
-                            .addField("W/L", decimalFormat.format(stats.getWins() * 1D / stats.getLoses()), true)
+                            .addField("W/L", TWO_DECIMALS.format(stats.getWins() * 1D / stats.getLoses()), true)
                             .build())
                     .queue();
         });

@@ -18,7 +18,7 @@ public class KnockFFAPlayerCommand extends PlayerCommand {
                             .setTitle("KnockFFA stats of " + player.getName())
                             .addField("Kills", String.valueOf(stats.getKills()), true)
                             .addField("Deaths", String.valueOf(stats.getDeaths()), true)
-                            .addField("K/D", decimalFormat.format(stats.getKills() * 1D / stats.getDeaths()), true)
+                            .addField("K/D", TWO_DECIMALS.format(stats.getKills() * 1D / stats.getDeaths()), true)
                             .build())
                     .queue();
         });

@@ -20,10 +20,7 @@ import de.jjjannik.interactions.commands.general.performance.PerformancePlayerCo
 import de.jjjannik.interactions.commands.general.tokens.TokensPlayerCommand;
 import de.jjjannik.interactions.commands.general.tokens.TokensTopCommand;
 import de.jjjannik.interactions.commands.knockpvp.*;
-import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabPlayerCommand;
-import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabRollingPlayerCommand;
-import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabRollingTopCommand;
-import de.jjjannik.interactions.commands.knockpvp.lab.KnockLabTopCommand;
+import de.jjjannik.interactions.commands.knockpvp.lab.*;
 import de.jjjannik.interactions.commands.minesweeper.*;
 import de.jjjannik.interactions.commands.minigames.bedwars.BedwarsPlayerCommand;
 import de.jjjannik.interactions.commands.minigames.bedwars.BedwarsTopCommand;
@@ -92,6 +89,7 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 @Slf4j
 public class Main {
@@ -100,6 +98,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         PropertyConfigurator.configure(Main.class.getClassLoader().getResourceAsStream("log4j2.properties"));
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         JDA jda = null;
 
         File file = new File("./GreevStatsStalker/config.yml");
@@ -166,6 +165,7 @@ public class Main {
                 new Choice("No Guessing", "NO_GUESSING"),
                 new Choice("Speedrun", "SPEEDRUN")
         );
+        OptionData labOption = new OptionData(OptionType.STRING, "experiment", "The name of lab experiment", true);
 
         jda.updateCommands().addCommands(
                 Commands.slash("general", "Command for all general stats")
@@ -345,7 +345,7 @@ public class Main {
                                 new SubcommandData("best-filtered", "Get best Minesweeper stats of player with filter")
                                         .addOptions(playerOption, minesweeperType, minesweeperGenerator, minesweeperMode),
                                 new SubcommandData("game", "Get Minesweeper game info")
-                                        .addOption(OptionType.INTEGER, "id", "The game Id of your Minesweeper round")
+                                        .addOption(OptionType.INTEGER, "id", "The game Id of your Minesweeper round", true)
                         ),
                 Commands.slash("mlgrush", "Get MLGRush stats")
                         .addSubcommands(
@@ -365,17 +365,9 @@ public class Main {
                                 new SubcommandGroupData("islands", "Get Fastbridge Island stats")
                                         .addSubcommands(
                                                 new SubcommandData("player", "Get Fastbridge Island stats of player")
-                                                        .addOptions(playerOption)
-                                                        .addOptions(new OptionData(OptionType.STRING, "map", "The Fastbridge map to get the data for", true).addChoices(
-                                                                new Choice("Cubes", "CUBES"),
-                                                                new Choice("Rails", "RAILS"),
-                                                                new Choice("Street", "STREET"),
-                                                                new Choice("Coral", "CORAL"),
-                                                                new Choice("Athen", "ATHEN")
-                                                        )),
+                                                        .addOptions(playerOption),
                                                 new SubcommandData("top", "Get top Fastbridge Island players")
                                                         .addOptions(topOption)
-                                                        .addOptions(playerOption)
                                                         .addOptions(new OptionData(OptionType.STRING, "map", "The Fastbridge map to get the data for", true).addChoices(
                                                                 new Choice("Cubes", "CUBES"),
                                                                 new Choice("Rails", "RAILS"),
@@ -389,22 +381,22 @@ public class Main {
                                                 new SubcommandData("player", "Get Fastbridge mode stats of player")
                                                         .addOptions(playerOption)
                                                         .addOptions(new OptionData(OptionType.STRING, "mode", "The Fastbridge mode to get the data for", true).addChoices(
-                                                                new Choice("Inclined", "0"),
-                                                                new Choice("Inclined Short", "1"),
-                                                                new Choice("Normal", "2"),
-                                                                new Choice("Short", "3"),
-                                                                new Choice("Extra Short", "4"),
-                                                                new Choice("Staircase", "5")
+                                                                new Choice("Inclined", "INCLINED"),
+                                                                new Choice("Inclined Short", "INCLINED_SHORT"),
+                                                                new Choice("Normal", "NORMAL"),
+                                                                new Choice("Short", "SHORT"),
+                                                                new Choice("Extra Short", "EXTRA_SHORT"),
+                                                                new Choice("Staircase", "STAIRCASE")
                                                         )),
                                                 new SubcommandData("top", "Get top Fastbridge mode players")
                                                         .addOptions(topOption)
                                                         .addOptions(new OptionData(OptionType.STRING, "mode", "The Fastbridge mode to get the data for", true).addChoices(
-                                                                new Choice("Inclined", "0"),
-                                                                new Choice("Inclined Short", "1"),
-                                                                new Choice("Normal", "2"),
-                                                                new Choice("Short", "3"),
-                                                                new Choice("Extra Short", "4"),
-                                                                new Choice("Staircase", "5")
+                                                                new Choice("Inclined", "INCLINED"),
+                                                                new Choice("Inclined Short", "INCLINED_SHORT"),
+                                                                new Choice("Normal", "NORMAL"),
+                                                                new Choice("Short", "SHORT"),
+                                                                new Choice("Extra Short", "EXTRA_SHORT"),
+                                                                new Choice("Staircase", "STAIRCASE")
                                                         ))
                                         )
                         ),
@@ -416,10 +408,10 @@ public class Main {
                                         .addOption(OptionType.INTEGER, "year", "Year of the advent", true),
                                 new SubcommandData("year", "Get Advent Jump&Run times of player of year")
                                         .addOptions(playerOption)
-                                        .addOption(OptionType.INTEGER, "day", "Day 1-24 of advent", true)
                                         .addOption(OptionType.INTEGER, "year", "Year of the advent", true),
                                 new SubcommandData("day", "Get Advent Jump&Run times of player of day")
                                         .addOptions(playerOption)
+                                        .addOption(OptionType.INTEGER, "year", "Year of the advent", true)
                                         .addOption(OptionType.INTEGER, "day", "Day 1-24 of advent", true)
                         ),
                 Commands.slash("knockpvp", "Get KnockPVP stats")
@@ -436,11 +428,11 @@ public class Main {
                                         .addOptions(rollingOption),
                                 new SubcommandData("yearly", "Get yearly KnockPVP stats of player")
                                         .addOptions(playerOption),
-                                new SubcommandData("monthly", "Get monthly KnockPVP stats of player")
+                                new SubcommandData("monthly", "Get KnockPVP stats of player of the last 30 days")
                                         .addOptions(playerOption),
-                                new SubcommandData("weekly", "Get weekly KnockPVP stats of player")
+                                new SubcommandData("weekly", "Get KnockPVP stats of player of the last 7 days")
                                         .addOptions(playerOption),
-                                new SubcommandData("daily", "Get daily KnockPVP stats of player")
+                                new SubcommandData("daily", "Get KnockPVP stats of player of the last 24 hours")
                                         .addOptions(playerOption),
                                 new SubcommandData("days", "Get KnockPVP stats of player of last N days")
                                         .addOptions(playerOption)
@@ -449,15 +441,20 @@ public class Main {
                 Commands.slash("knockpvp-lab", "Get KnockPVP-Lab stats from experiment")
                         .addSubcommands(
                                 new SubcommandData("top", "Get top KnockPVP-Lab players")
+                                        .addOptions(labOption)
                                         .addOptions(topOption),
                                 new SubcommandData("rolling-top", "Get top rolling KnockPVP-Lab players")
+                                        .addOptions(labOption)
                                         .addOptions(topOption)
                                         .addOptions(rollingOption),
                                 new SubcommandData("player", "Get KnockPVP-Lab stats of player")
-                                        .addOptions(playerOption),
+                                        .addOptions(playerOption)
+                                        .addOptions(labOption),
                                 new SubcommandData("rolling-player", "Get rolling KnockPVP-Lab stats of player")
                                         .addOptions(playerOption)
-                                        .addOptions(rollingOption)
+                                        .addOptions(labOption)
+                                        .addOptions(rollingOption),
+                                new SubcommandData("list", "Lists all KnockPVP-Lab experiments")
                         )
         ).queue();
 
@@ -589,5 +586,6 @@ public class Main {
         registerInteraction("knockpvp-lab rolling-top", new KnockLabRollingTopCommand());
         registerInteraction("knockpvp-lab player", new KnockLabPlayerCommand());
         registerInteraction("knockpvp-lab rolling-player", new KnockLabRollingPlayerCommand());
+        registerInteraction("knockpvp-lab list", new ListExperimentsCommand());
     }
 }

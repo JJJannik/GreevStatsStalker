@@ -21,7 +21,8 @@ import java.util.regex.Pattern;
 @Slf4j
 public abstract class PlayerCommand implements Interaction {
     private final Pattern uuidRegex = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
-    protected final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    public static final DecimalFormat TWO_DECIMALS = new DecimalFormat("#.##");
+    public static final DecimalFormat MILLIS_TO_SECONDS = new DecimalFormat("#.### seconds");
     protected final JGA jga = Main.getJga();
 
     protected void handlePlayerCommand(SlashCommandInteractionEvent evt, Consumer<Player> playerConsumer) {
@@ -44,12 +45,12 @@ public abstract class PlayerCommand implements Interaction {
         }
 
         try {
-            Player p = new Player(jga.getKnockPvPPlayer(uuid).getJsonObject()); // don't question this, jga.getPlayerName(UUID) just times out if UUID is valid but there's no player with that uuid
+            Player p = new Player(jga.getPlayerMetaData(uuid).getJsonObject()); // don't question this, jga.getPlayerName(UUID) just times out if UUID is valid but there's no player with that uuid
             playerConsumer.accept(p);
         } catch (APICallException e) {
             evt.replyEmbeds(new EmbedBuilder()
                             .setColor(Color.RED)
-                            .addField("❌ **No player found**", "This player either does not exist or never joined Greev.eu", false).build())
+                            .addField("❌ **No player found**", "This player either does not exist, never joined Greev.eu or doesn't have any stats in that gamemode", false).build())
                     .setEphemeral(true)
                     .queue();
         }

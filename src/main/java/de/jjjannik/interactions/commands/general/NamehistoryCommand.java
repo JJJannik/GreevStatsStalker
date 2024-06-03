@@ -25,6 +25,7 @@ public class NamehistoryCommand extends PlayerCommand {
                                 .addField("❌ **Unknown player**", "Name changes of this player are unknown to the Greev API, try your luck here: https://de.namemc.com/profile/" + player.getUuid().toString(), false)
                                 .build()
                 ).setEphemeral(true).queue();
+                return;
             }
 
             for (int i = 1; i <= nameHistory.size(); i++) {

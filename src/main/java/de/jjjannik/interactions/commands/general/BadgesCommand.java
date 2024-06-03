@@ -25,6 +25,7 @@ public class BadgesCommand extends PlayerCommand {
                         .addField("❌ **No badges**", "This player never joined the server since Badges exist", false)
                         .build()
                 ).setEphemeral(true).queue();
+                return;
             }
 
             for (int i = 1; i <= badges.size(); i++) {

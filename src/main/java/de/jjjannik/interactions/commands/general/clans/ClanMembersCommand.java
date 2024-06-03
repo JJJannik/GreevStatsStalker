@@ -28,6 +28,7 @@ public class ClanMembersCommand implements Interaction {
                     .addField("❌ **Clan not found**", "A clan with that name does not exist", false)
                     .build()
             ).setEphemeral(true).queue();
+            return;
         }
 
         for (int i = 1; i <= members.size(); i++) {

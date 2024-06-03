@@ -18,7 +18,7 @@ public class SpleefPlayerCommand extends PlayerCommand {
                             .setTitle("Spleef stats of " + player.getName())
                             .addField("Wins", String.valueOf(stats.getWins()), true)
                             .addField("Loses", String.valueOf(stats.getLoses()), true)
-                            .addField("W/L", decimalFormat.format(stats.getWins() * 1D / stats.getLoses()), true)
+                            .addField("W/L", TWO_DECIMALS.format(stats.getWins() * 1D / stats.getLoses()), true)
                             .build())
                     .queue();
         });
