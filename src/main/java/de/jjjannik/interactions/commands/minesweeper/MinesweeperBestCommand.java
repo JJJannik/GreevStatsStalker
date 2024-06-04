@@ -1,7 +1,7 @@
 package de.jjjannik.interactions.commands.minesweeper;
 
+import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.minesweeper.MinesweeperTimePlayer;
-import de.jjjannik.interactions.PlayerCommand;
 import de.jjjannik.requests.Minesweeper.Mode;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;

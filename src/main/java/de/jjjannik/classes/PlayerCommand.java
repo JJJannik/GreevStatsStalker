@@ -1,8 +1,9 @@
-package de.jjjannik.interactions;
+package de.jjjannik.classes;
 
 import de.jjjannik.Main;
 import de.jjjannik.api.JGA;
 import de.jjjannik.entities.basic.Player;
+import de.jjjannik.interactions.Interaction;
 import de.jjjannik.utils.exceptions.APICallException;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;

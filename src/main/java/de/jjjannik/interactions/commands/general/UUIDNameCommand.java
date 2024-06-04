@@ -1,6 +1,6 @@
 package de.jjjannik.interactions.commands.general;
 
-import de.jjjannik.interactions.PlayerCommand;
+import de.jjjannik.classes.PlayerCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

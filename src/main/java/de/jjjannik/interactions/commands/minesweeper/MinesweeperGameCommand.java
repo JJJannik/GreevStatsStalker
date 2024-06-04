@@ -2,9 +2,9 @@ package de.jjjannik.interactions.commands.minesweeper;
 
 import de.jjjannik.Main;
 import de.jjjannik.api.JGA;
+import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.minesweeper.MinesweeperGameEntry;
 import de.jjjannik.interactions.Interaction;
-import de.jjjannik.interactions.PlayerCommand;
 import de.jjjannik.utils.exceptions.APICallException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

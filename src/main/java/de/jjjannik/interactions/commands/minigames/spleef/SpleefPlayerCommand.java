@@ -1,7 +1,7 @@
 package de.jjjannik.interactions.commands.minigames.spleef;
 
+import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.basic.WinsLosesPlayer;
-import de.jjjannik.interactions.PlayerCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

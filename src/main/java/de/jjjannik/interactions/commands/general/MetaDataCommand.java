@@ -1,8 +1,8 @@
 package de.jjjannik.interactions.commands.general;
 
+import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.ClanPlayer;
 import de.jjjannik.entities.playerstats.PlayerMetaEntity;
-import de.jjjannik.interactions.PlayerCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

@@ -1,7 +1,7 @@
 package de.jjjannik.interactions.commands.fastbridge.islands;
 
+import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.FastBridgePlayer;
-import de.jjjannik.interactions.PlayerCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class FastbridgeIslandsPlayerCommand extends PlayerCommand {

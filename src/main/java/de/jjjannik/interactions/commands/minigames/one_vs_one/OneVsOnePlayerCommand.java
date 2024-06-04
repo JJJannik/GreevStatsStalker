@@ -1,7 +1,7 @@
 package de.jjjannik.interactions.commands.minigames.one_vs_one;
 
+import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
-import de.jjjannik.interactions.PlayerCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

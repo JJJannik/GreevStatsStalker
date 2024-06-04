@@ -208,7 +208,7 @@ public class Main {
                                                 new SubcommandData("details", "Get Clan details")
                                                         .addOptions(clanOption),
                                                 new SubcommandData("top", "Get top Clans")
-                                                        .addOptions(clanOption, topOption[0], topOption[1]),
+                                                        .addOptions(topOption[0], topOption[1]),
                                                 new SubcommandData("members", "Get Clan members. Note: This will only show up to 250 members")
                                                         .addOptions(clanOption)
                                         )
