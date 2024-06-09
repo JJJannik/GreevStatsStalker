@@ -14,11 +14,11 @@ public class TokensTopCommand extends TopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
-            List<TokensPlayer> topStats = jga.getTopTokens(top.getAmount(), top.getOffset());
+            List<TokensPlayer> topStats = jga.getTopTokens(top.amount(), top.offset());
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.getAmount() + " Tokens starting at offset " + top.getOffset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Tokens starting at offset " + top.offset());
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {

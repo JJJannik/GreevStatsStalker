@@ -14,11 +14,11 @@ public class MLGRushTopCommand extends TopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
-            List<MLGRushPlayer> topStats = jga.getTopMLGRush(top.getAmount(), top.getOffset());
+            List<MLGRushPlayer> topStats = jga.getTopMLGRush(top.amount(), top.offset());
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.getAmount() + " MLGRush starting at offset " + top.getOffset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " MLGRush starting at offset " + top.offset());
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {

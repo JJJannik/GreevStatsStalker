@@ -20,7 +20,7 @@ public class KnockLabTopCommand extends TopCommand {
             List<KillsDeathsPlayer> topStats;
 
             try {
-                topStats = jga.getTopKnockPvPLab(experiment, top.getAmount(), top.getOffset());
+                topStats = jga.getTopKnockPvPLab(experiment, top.amount(), top.offset());
             } catch (APICallException e) {
                 evt.replyEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
@@ -32,7 +32,7 @@ public class KnockLabTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.getAmount() + " KnockPvP-Lab starting at offset " + top.getOffset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " KnockPvP-Lab starting at offset " + top.offset());
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
