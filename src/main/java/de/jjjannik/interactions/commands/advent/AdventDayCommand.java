@@ -26,7 +26,7 @@ public class AdventDayCommand extends PlayerCommand {
 
             int year = evt.getOption("year", OptionMapping::getAsInt);
 
-            List<JumpNRunTime> runTimes = jga.getAllPlayerJumpAndRunTimes(player.getUuid(), year, day);
+            List<JumpNRunTime> runTimes = jga.getDayPlayerAdventTimes(player.getUuid(), year, day);
 
 
         });

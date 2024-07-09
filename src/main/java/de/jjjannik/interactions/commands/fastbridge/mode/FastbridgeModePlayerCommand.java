@@ -1,7 +1,7 @@
 package de.jjjannik.interactions.commands.fastbridge.mode;
 
 import de.jjjannik.classes.PlayerCommand;
-import de.jjjannik.entities.FastBridgePlayer;
+import de.jjjannik.entities.fastbridge.FastBridgePlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -25,14 +25,14 @@ public class FastbridgeModePlayerCommand extends PlayerCommand {
                  default -> fastBridgePlayer = null;
              }
 
-            evt.replyEmbeds(new EmbedBuilder()
-                            .setColor(Color.GREEN)
-                            .setTitle("Fastbridge %s stats of %s".formatted(mode.toLowerCase(), player.getName()))
-                            .addField("Time", String.valueOf(fastBridgePlayer.getTime()), false)
-                            //.addField("Replay Id", fastBridgePlayer.getReplayId, false)
-                            .addField("Timestamp", fastBridgePlayer.getTimestamp(), false)
-                            .build())
-                    .queue();
+             evt.replyEmbeds(new EmbedBuilder()
+                             .setColor(Color.GREEN)
+                             .setTitle("Fastbridge %s stats of %s".formatted(mode.toLowerCase(), player.getName()))
+                             .addField("Time", String.valueOf(fastBridgePlayer.getTime()), false)
+                             .addField("Replay Id", fastBridgePlayer.getReplayId(), false)
+                             .addField("Timestamp", fastBridgePlayer.getTimestamp(), false)
+                             .build())
+                     .queue();
         });
     }
 }

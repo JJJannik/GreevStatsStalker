@@ -36,7 +36,7 @@ public class MinesweeperGameCommand implements Interaction {
                             .addField("Won", String.valueOf(game.isWon()), true)
                             .addField("X size", String.valueOf(game.getXSize()), true)
                             .addField("Z size", String.valueOf(game.getZSize()), true)
-                            .addField("", "", true)     // would look awful without this
+                            .addField("", "", true)     // would look awful without this (on pc... on mobile it looks sh*t doesn't matter what I do)
                             .addField("Game data", game.getGameData(), false)
                             .addField("Game string", game.getGameString(), false)
                             .build())
