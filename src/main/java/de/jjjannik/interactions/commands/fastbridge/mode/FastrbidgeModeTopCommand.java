@@ -1,10 +1,7 @@
 package de.jjjannik.interactions.commands.fastbridge.mode;
 
 import de.jjjannik.classes.TopCommand;
-import de.jjjannik.entities.fastbridge.FastBridgeIslandsPlayer;
 import de.jjjannik.entities.fastbridge.FastBridgePlayer;
-import de.jjjannik.interactions.Interaction;
-import de.jjjannik.requests.FastbridgeIslands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -13,7 +10,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class FastrbidgeModeTopCommand extends TopCommand {
     @Override
