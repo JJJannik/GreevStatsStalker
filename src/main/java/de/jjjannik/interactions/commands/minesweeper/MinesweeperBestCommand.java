@@ -17,11 +17,7 @@ public class MinesweeperBestCommand extends PlayerCommand {
     public void execute(SlashCommandInteractionEvent evt) {
         handlePlayerCommand(evt, player -> {
             String option = evt.getOption("mode", OptionMapping::getAsString);
-            Mode mode = Mode.DEFAULT;
-
-            if (option != null) {
-                mode = Mode.valueOf(evt.getOption("mode", OptionMapping::getAsString));
-            }
+            Mode mode = option == null ? Mode.DEFAULT : Mode.valueOf(option);
 
             List<MinesweeperTimePlayer> timePlayerList = jga.getBestMinesweeperTimes(player.getUuid(), mode);
 

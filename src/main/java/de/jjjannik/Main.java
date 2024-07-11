@@ -331,19 +331,20 @@ public class Main {
                         Commands.slash("minesweeper", "Get Minesweeper stats").addSubcommands(
                                 new SubcommandData("top", "Get top Minesweeper player")
                                         .addOptions(topOption)
-                                        .addOptions(minesweeperMode,
+                                        .addOptions(
+                                                minesweeperType.setRequired(true),
+                                                minesweeperGenerator.setRequired(true),
+                                                minesweeperMode,
                                                 minesweeperCriteria,
                                                 rollingOption[0].setRequired(false),
-                                                rollingOption[1].setRequired(false),
-                                                minesweeperType,
-                                                minesweeperGenerator
+                                                rollingOption[1].setRequired(false)
                                         ),
                                 new SubcommandData("player", "Get Minesweeper stats of player")
                                         .addOptions(playerOption, minesweeperMode),
                                 new SubcommandData("best", "Get best Minesweeper stats of player")
                                         .addOptions(playerOption, minesweeperMode),
                                 new SubcommandData("best-filtered", "Get best Minesweeper stats of player with filter")
-                                        .addOptions(playerOption, minesweeperType, minesweeperGenerator, minesweeperMode),
+                                        .addOptions(playerOption, minesweeperType.setRequired(true), minesweeperGenerator.setRequired(true), minesweeperMode),
                                 new SubcommandData("game", "Get Minesweeper game info")
                                         .addOption(OptionType.INTEGER, "id", "The game Id of your Minesweeper round", true)
                         ),
