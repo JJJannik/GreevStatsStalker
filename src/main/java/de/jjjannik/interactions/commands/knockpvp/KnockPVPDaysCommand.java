@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.awt.*;
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +27,17 @@ public class KnockPVPDaysCommand extends PlayerCommand {
             }
 
             Instant now = Instant.now();
-            Instant lastDay = now.minusSeconds(TimeUnit.DAYS.toSeconds(days));
+            Instant lastDay;
+            try {
+                lastDay = now.minusSeconds(TimeUnit.DAYS.toSeconds(days));
+            } catch (DateTimeException e) {
+                evt.replyEmbeds(new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .addField("❌ **Incorrect option**", "Option 'days' can't be longer back than start of the [unix time](https://www.unixtimestamp.com/)", false).build())
+                        .setEphemeral(true)
+                        .queue();
+                return;
+            }
 
             KillsDeathsPlayer stats = jga.getRollingKnockPvPPlayer(player.getUuid(), lastDay.getEpochSecond(), now.getEpochSecond());
 

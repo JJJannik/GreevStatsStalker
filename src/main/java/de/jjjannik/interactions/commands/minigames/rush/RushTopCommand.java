@@ -18,7 +18,7 @@ public class RushTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " JumpLeague player starting at offset " + top.offset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Rush player starting at offset " + top.offset());
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {

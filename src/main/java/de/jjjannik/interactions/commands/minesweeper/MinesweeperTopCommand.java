@@ -21,8 +21,8 @@ public class MinesweeperTopCommand extends TopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
-            Long start = evt.getOption("start-timestamp", OptionMapping::getAsLong);
-            Long end = evt.getOption("end-timestamp", OptionMapping::getAsLong);
+            Long start = evt.getOption("start-timestamp", OptionMapping::getAsLong) * 1000;
+            Long end = evt.getOption("end-timestamp", OptionMapping::getAsLong) * 1000;
 
             Type type = Type.valueOf(evt.getOption("type", OptionMapping::getAsString));
             Generator gen = Generator.valueOf(evt.getOption("generator", OptionMapping::getAsString));

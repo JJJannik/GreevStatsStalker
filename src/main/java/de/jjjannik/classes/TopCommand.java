@@ -2,6 +2,7 @@ package de.jjjannik.classes;
 
 import de.jjjannik.Main;
 import de.jjjannik.api.JGA;
+import de.jjjannik.classes.entities.TopOptions;
 import de.jjjannik.interactions.Interaction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

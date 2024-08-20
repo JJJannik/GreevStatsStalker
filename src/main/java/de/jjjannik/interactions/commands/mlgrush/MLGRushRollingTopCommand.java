@@ -16,8 +16,8 @@ public class MLGRushRollingTopCommand extends TopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
-            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt);
-            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt);
+            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt) * 1000L;
+            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt) * 1000L;
 
             List<MLGRushPlayer> topStats = jga.getRollingTopMLGRush(top.amount(), top.offset(), start, end);
 

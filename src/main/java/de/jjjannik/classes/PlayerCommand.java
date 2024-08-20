@@ -12,9 +12,11 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -23,7 +25,8 @@ import java.util.regex.Pattern;
 public abstract class PlayerCommand implements Interaction {
     private final Pattern uuidRegex = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
     public static final DecimalFormat TWO_DECIMALS = new DecimalFormat("#.##");
-    public static final DecimalFormat MILLIS_TO_SECONDS = new DecimalFormat("#.### seconds");
+    public static final DecimalFormat MILLIS_TO_SECONDS = new DecimalFormat("0.000 seconds");
+    public static final NumberFormat THOUSAND_SEPERATOR = NumberFormat.getInstance(new Locale("en_US"));
     protected final JGA jga = Main.getJga();
 
     protected void handlePlayerCommand(SlashCommandInteractionEvent evt, Consumer<Player> playerConsumer) {

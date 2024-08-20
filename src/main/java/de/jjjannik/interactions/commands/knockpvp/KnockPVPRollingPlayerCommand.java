@@ -12,8 +12,8 @@ public class KnockPVPRollingPlayerCommand extends PlayerCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handlePlayerCommand(evt, player -> {
-            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt);
-            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt);
+            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt) * 1000;
+            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt) * 1000;
 
             KillsDeathsPlayer stats = jga.getRollingKnockPvPPlayer(player.getUuid(), start, end);
 

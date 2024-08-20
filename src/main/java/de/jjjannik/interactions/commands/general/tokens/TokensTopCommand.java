@@ -10,6 +10,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.jjjannik.classes.PlayerCommand.THOUSAND_SEPERATOR;
+
 public class TokensTopCommand extends TopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
@@ -26,7 +28,11 @@ public class TokensTopCommand extends TopCommand {
 
                 TokensPlayer stats = topStats.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(stats.getName(), String.valueOf(stats.getTokens()), true);
+                MessageEmbed.Field field = new MessageEmbed.Field(
+                        stats.getName(),
+                        THOUSAND_SEPERATOR.format(stats.getTokens()),
+                        true
+                );
 
                 if (i < 25) {
                     builder.addField(field);

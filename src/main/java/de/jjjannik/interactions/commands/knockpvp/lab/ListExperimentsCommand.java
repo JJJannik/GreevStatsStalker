@@ -19,6 +19,7 @@ public class ListExperimentsCommand implements Interaction {
                 .addField("Knock Stick", "API: KNOCKSTICK", true)
                 .addField("KnockFFA", "API: KNOCKFFA", true)
                 .addField("Bows", "API: BOW", true)
+                        .addField("Potions", "API: POTIONS", true)
                 .build())
                 .queue();
     }

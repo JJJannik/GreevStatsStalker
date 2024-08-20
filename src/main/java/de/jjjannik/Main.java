@@ -2,6 +2,7 @@ package de.jjjannik;
 
 import de.jjjannik.api.JGA;
 import de.jjjannik.interactions.Interaction;
+import de.jjjannik.interactions.commands.AboutCommand;
 import de.jjjannik.interactions.commands.advent.AdventDayCommand;
 import de.jjjannik.interactions.commands.advent.AdventTopCommand;
 import de.jjjannik.interactions.commands.advent.AdventYearCommand;
@@ -66,6 +67,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -90,6 +92,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class Main {
@@ -328,26 +331,6 @@ public class Main {
                                                         .addOptions(topOption)
                                         )
                         ),
-                        Commands.slash("minesweeper", "Get Minesweeper stats").addSubcommands(
-                                new SubcommandData("top", "Get top Minesweeper player")
-                                        .addOptions(topOption)
-                                        .addOptions(
-                                                minesweeperType.setRequired(true),
-                                                minesweeperGenerator.setRequired(true),
-                                                minesweeperMode,
-                                                minesweeperCriteria,
-                                                rollingOption[0].setRequired(false),
-                                                rollingOption[1].setRequired(false)
-                                        ),
-                                new SubcommandData("player", "Get Minesweeper stats of player")
-                                        .addOptions(playerOption, minesweeperMode),
-                                new SubcommandData("best", "Get best Minesweeper stats of player")
-                                        .addOptions(playerOption, minesweeperMode),
-                                new SubcommandData("best-filtered", "Get best Minesweeper stats of player with filter")
-                                        .addOptions(playerOption, minesweeperType.setRequired(true), minesweeperGenerator.setRequired(true), minesweeperMode),
-                                new SubcommandData("game", "Get Minesweeper game info")
-                                        .addOption(OptionType.INTEGER, "id", "The game Id of your Minesweeper round", true)
-                        ),
                 Commands.slash("mlgrush", "Get MLGRush stats")
                         .addSubcommands(
                                 new SubcommandData("top", "Get top MLGRush players")
@@ -456,12 +439,43 @@ public class Main {
                                         .addOptions(labOption)
                                         .addOptions(rollingOption),
                                 new SubcommandData("list", "Lists all KnockPVP-Lab experiments")
-                        )
+                        ),
+                Commands.slash("minesweeper", "Get Minesweeper stats").addSubcommands(
+                        new SubcommandData("top", "Get top Minesweeper player")
+                                .addOptions(topOption)
+                                .addOptions(
+                                        minesweeperType.setRequired(true),
+                                        minesweeperGenerator.setRequired(true),
+                                        minesweeperMode,
+                                        minesweeperCriteria,
+                                        rollingOption[0].setRequired(false),
+                                        rollingOption[1].setRequired(false)
+                                ),
+                        new SubcommandData("player", "Get Minesweeper stats of player")
+                                .addOptions(playerOption, minesweeperMode),
+                        new SubcommandData("best", "Get best Minesweeper stats of player")
+                                .addOptions(playerOption, minesweeperMode),
+                        new SubcommandData("best-filtered", "Get best Minesweeper stats of player with filter")
+                                .addOptions(playerOption, minesweeperType.setRequired(true), minesweeperGenerator.setRequired(true), minesweeperMode),
+                        new SubcommandData("game", "Get Minesweeper game info")
+                                .addOption(OptionType.INTEGER, "id", "The game Id of your Minesweeper round", true)
+                )
         ).queue();
 
         registerAllCommands();
 
         log.info("Started: {}", OffsetDateTime.now(ZoneId.systemDefault()));
+        
+        AtomicInteger subCommands = new AtomicInteger();
+
+        jda.retrieveCommands().queue(s -> {
+            log.info("{} registered slash commands", s.size());
+            for (Command c : s) {
+                subCommands.addAndGet(c.getSubcommands().size());
+                c.getSubcommandGroups().forEach(sg -> subCommands.addAndGet(sg.getSubcommands().size()));
+            }
+            log.info("With {} subcommands", subCommands.get());
+        });
     }
 
     private static File getResourceAsFile(String resourcePath) {
@@ -486,6 +500,8 @@ public class Main {
     }
 
     private static void registerAllCommands() {
+        registerInteraction("about", new AboutCommand());
+
         registerInteraction("general metadata", new MetaDataCommand());
         registerInteraction("general badges", new BadgesCommand());
         registerInteraction("general player", new UUIDNameCommand());

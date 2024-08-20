@@ -12,8 +12,8 @@ public class MLGRushRollingPlayerCommand extends PlayerCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handlePlayerCommand(evt, player -> {
-            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt);
-            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt);
+            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt) * 1000L;
+            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt) * 1000L;
 
             MLGRushPlayer stats = jga.getRollingMLGRushPlayer(player.getUuid(), start, end);
 
