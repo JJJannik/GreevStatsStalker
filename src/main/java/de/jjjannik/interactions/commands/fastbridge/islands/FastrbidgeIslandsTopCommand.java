@@ -23,10 +23,10 @@ public class FastrbidgeIslandsTopCommand extends TopCommand {
             List<MessageEmbed> embeds = new ArrayList<>();
 
             EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
-                    .setTitle("Top %s Fastbridge Island `%s` stats starting at offset %s".formatted(
+                    .setTitle("Top %s Fastbridge Island `%s` stats starting with #%s".formatted(
                             top.amount(),
                             map,
-                            top.offset()
+                            top.offset()+1
                     ));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
@@ -35,7 +35,7 @@ public class FastrbidgeIslandsTopCommand extends TopCommand {
 
                 FastBridgeIslandsPlayer stats = topStats.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(stats.getName(), """
+                MessageEmbed.Field field = new MessageEmbed.Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Time: %s
                         Replay Id: %s
                         Timestamp: %s

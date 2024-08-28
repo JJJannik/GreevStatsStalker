@@ -23,17 +23,17 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public abstract class PlayerCommand implements Interaction {
-    private final Pattern uuidRegex = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+    public static final Pattern UUID_REGEX = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
     public static final DecimalFormat TWO_DECIMALS = new DecimalFormat("#.##");
-    public static final DecimalFormat MILLIS_TO_SECONDS = new DecimalFormat("0.000 seconds");
-    public static final NumberFormat THOUSAND_SEPERATOR = NumberFormat.getInstance(new Locale("en_US"));
+    public static final DecimalFormat MILLIS_TO_SECONDS = new DecimalFormat("#.### seconds");
+    public static final NumberFormat THOUSAND_SEPARATOR = NumberFormat.getInstance(new Locale("en_US"));
     protected final JGA jga = Main.getJga();
 
     protected void handlePlayerCommand(SlashCommandInteractionEvent evt, Consumer<Player> playerConsumer) {
         String option = evt.getOption("player", OptionMapping::getAsString);
         UUID uuid;
 
-        if (uuidRegex.matcher(option).matches()) {
+        if (UUID_REGEX.matcher(option).matches()) {
             uuid = UUID.fromString(option);
         } else {
             try {
@@ -41,7 +41,7 @@ public abstract class PlayerCommand implements Interaction {
             } catch (Exception e) {
                 evt.replyEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
-                                .addField("❌ **No player found**", "The player with this uuid does not exist", false).build())
+                                .addField("❌ **No player found**", "Your specified player does not exist", false).build())
                         .setEphemeral(true)
                         .queue();
                 return;

@@ -18,7 +18,7 @@ public class BowSpleefTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " BowSpleef player starting at offset " + top.offset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " BowSpleef player starting with #" + top.offset()+1);
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
@@ -26,7 +26,7 @@ public class BowSpleefTopCommand extends TopCommand {
 
                 WinsLosesPlayer stats = topStats.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(stats.getName(), """
+                MessageEmbed.Field field = new MessageEmbed.Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Wins: %s
                         Loses: %s
                         """.formatted(stats.getWins(), stats.getLoses()), true);

@@ -19,14 +19,14 @@ public class ClanTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " clans starting at offset " + top.offset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " clans starting with #" + top.offset()+1);
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
                 if (topStats.size() == i) break;
 
                 ClanEntity stats = topStats.get(i);
-                Field field = new Field(stats.getName(), """
+                Field field = new Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Tag: %s
                         Size: %s
                         Performance: %s

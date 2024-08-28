@@ -18,7 +18,7 @@ public class MLGRushTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " MLGRush starting at offset " + top.offset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " MLGRush starting with #" + top.offset()+1);
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
@@ -26,7 +26,7 @@ public class MLGRushTopCommand extends TopCommand {
 
                 MLGRushPlayer stats = topStats.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(stats.getName(), """
+                MessageEmbed.Field field = new MessageEmbed.Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Wins: %s
                         Loses: %s
                         Broken Beds: %s

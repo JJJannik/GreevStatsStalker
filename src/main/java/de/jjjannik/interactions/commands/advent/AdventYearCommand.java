@@ -17,7 +17,7 @@ public class AdventYearCommand extends PlayerCommand {
         handlePlayerCommand(evt, player -> {
             int year = evt.getOption("year", OptionMapping::getAsInt);
 
-            java.util.List<JumpNRunTime> runTimes = jga.getYearPlayerAdventTimes(player.getUuid(), year);
+            List<JumpNRunTime> runTimes = jga.getYearPlayerAdventTimes(player.getUuid(), year);
 
             if (runTimes.isEmpty()) {
                 evt.replyEmbeds(new EmbedBuilder().setColor(Color.RED)
@@ -31,7 +31,7 @@ public class AdventYearCommand extends PlayerCommand {
             List<MessageEmbed> embeds = new ArrayList<>();
 
             EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
-                    .setTitle("Advent Jump&Run times of %s on in %s".formatted(player.getName(), year));
+                    .setTitle("Advent Jump&Run times of %s in %s".formatted(player.getName(), year));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
@@ -39,7 +39,7 @@ public class AdventYearCommand extends PlayerCommand {
 
                 JumpNRunTime stats = runTimes.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(MILLIS_TO_SECONDS.format(stats.getTime()/1000L), """
+                MessageEmbed.Field field = new MessageEmbed.Field("Door %s: %s".formatted(i+1, MILLIS_TO_SECONDS.format(stats.getTime()/1000L)), """
                         Fails: %s
                         Checkpoints: %s
                         """.formatted(stats.getFails(), stats.getCheckpoints()), true);

@@ -1,34 +1,30 @@
 package de.jjjannik.interactions.commands.knockpvp;
 
-import de.jjjannik.classes.TopCommand;
+import de.jjjannik.classes.RollingTopCommand;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.TimeFormat;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KnockPVPRollingTopCommand extends TopCommand {
+public class KnockPVPRollingTopCommand extends RollingTopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
-        handleTopCommand(evt, top -> {
-            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt);
-            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt);
-
-            List<KillsDeathsPlayer> topStats = jga.getRollingTopKnockPvP(top.amount(), top.offset(), start, end);
+        handleRollingTopCommand(evt, (top, rolling) -> {
+            List<KillsDeathsPlayer> topStats = jga.getRollingTopKnockPvP(top.amount(), top.offset(), rolling.startTime(), rolling.endTime());
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
             EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
-                    .setTitle("Top %s KnockPVP player starting at #%s from %s to %s".formatted(
+                    .setTitle("Top %s KnockPVP player starting with #%s from %s to %s".formatted(
                             top.amount(),
-                            top.offset(),
-                            TimeFormat.DATE_TIME_SHORT.format(start),
-                            TimeFormat.DATE_TIME_SHORT.format(end)
+                            top.offset()+1,
+                            TimeFormat.DATE_TIME_SHORT.format(rolling.startTime()),
+                            TimeFormat.DATE_TIME_SHORT.format(rolling.endTime())
                     ));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
@@ -37,7 +33,7 @@ public class KnockPVPRollingTopCommand extends TopCommand {
 
                 KillsDeathsPlayer stats = topStats.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(stats.getName(), """
+                MessageEmbed.Field field = new MessageEmbed.Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Kills: %s
                         Deaths: %s
                         """.formatted(stats.getKills(), stats.getDeaths()), true);

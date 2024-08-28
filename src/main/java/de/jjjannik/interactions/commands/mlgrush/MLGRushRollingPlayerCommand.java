@@ -1,25 +1,28 @@
 package de.jjjannik.interactions.commands.mlgrush;
 
-import de.jjjannik.classes.PlayerCommand;
+import de.jjjannik.classes.RollingPlayerCommand;
 import de.jjjannik.entities.MLGRushPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.utils.TimeFormat;
 
 import java.awt.*;
 
-public class MLGRushRollingPlayerCommand extends PlayerCommand {
+import static de.jjjannik.classes.PlayerCommand.TWO_DECIMALS;
+
+public class MLGRushRollingPlayerCommand extends RollingPlayerCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
-        handlePlayerCommand(evt, player -> {
-            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt) * 1000L;
-            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt) * 1000L;
-
-            MLGRushPlayer stats = jga.getRollingMLGRushPlayer(player.getUuid(), start, end);
+        handleRollingPlayerCommand(evt, (player, rolling) -> {
+            MLGRushPlayer stats = jga.getRollingMLGRushPlayer(player.getUuid(), rolling.startTime(), rolling.endTime());
 
             evt.replyEmbeds(new EmbedBuilder()
                             .setColor(Color.GREEN)
-                            .setTitle("MLGRush stats of " + player.getName())
+                            .setTitle("MLGRush stats of %s from %s to %s".formatted(
+                                    player.getName(),
+                                    TimeFormat.DATE_TIME_SHORT.format(rolling.startTime()),
+                                    TimeFormat.DATE_TIME_SHORT.format(rolling.endTime())
+                            ))
                             .addField("Wins", String.valueOf(stats.getWins()), true)
                             .addField("Loses", String.valueOf(stats.getLoses()), true)
                             .addField("W/L", TWO_DECIMALS.format(stats.getWins() * 1D / stats.getLoses()), true)

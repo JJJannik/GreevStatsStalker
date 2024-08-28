@@ -19,7 +19,7 @@ public class PerfomanceTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Player performance starting at offset " + top.offset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Player performance starting with #" + top.offset()+1);
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
@@ -27,7 +27,7 @@ public class PerfomanceTopCommand extends TopCommand {
 
                 PerformancePlayer stats = topStats.get(i);
 
-                Field field = new Field(stats.getName(), String.valueOf(stats.getPerformance()), true);
+                Field field = new Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), String.valueOf(stats.getPerformance()), true);
 
                 if (i < 25) {
                     builder.addField(field);

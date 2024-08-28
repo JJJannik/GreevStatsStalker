@@ -1,6 +1,6 @@
 package de.jjjannik.interactions.commands.minesweeper;
 
-import de.jjjannik.classes.PlayerCommand;
+import de.jjjannik.classes.RollingPlayerCommand;
 import de.jjjannik.entities.minesweeper.MinesweeperPlayer;
 import de.jjjannik.requests.Minesweeper.Generator;
 import de.jjjannik.requests.Minesweeper.Mode;
@@ -11,13 +11,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.awt.*;
 
-public class MinesweeperPlayerCommand extends PlayerCommand {
+public class MinesweeperPlayerCommand extends RollingPlayerCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
-        handlePlayerCommand(evt, player -> {
-            long start = evt.getOption("start-timestamp", OptionMapping::getAsInt) * 1000L;
-            long end = evt.getOption("end-timestamp", OptionMapping::getAsInt) * 1000L;
-
+        handleRollingPlayerCommand(evt, (player, rolling) -> {
             String modeOption = evt.getOption("mode", OptionMapping::getAsString);
             String typeOption = evt.getOption("type", OptionMapping::getAsString);
             String genOption = evt.getOption("generator", OptionMapping::getAsString);
@@ -26,7 +23,7 @@ public class MinesweeperPlayerCommand extends PlayerCommand {
             Type type = typeOption == null ? null : Type.valueOf(typeOption);
             Generator gen = genOption == null ? null : Generator.valueOf(genOption);
 
-            MinesweeperPlayer msPlayer = jga.getMinesweeperPlayer(player.getUuid(), type, gen, mode, start, end);
+            MinesweeperPlayer msPlayer = jga.getMinesweeperPlayer(player.getUuid(), type, gen, mode, rolling.startTime(), rolling.endTime());
 
             evt.replyEmbeds(new EmbedBuilder()
                             .setColor(Color.GREEN)

@@ -17,6 +17,8 @@ public class FastrbidgeModeTopCommand extends TopCommand {
         handleTopCommand(evt, top -> {
             String mode = evt.getOption("mode", OptionMapping::getAsString);
 
+            evt.deferReply().queue();
+
             List<FastBridgePlayer> topStats;
 
             switch (mode) {
@@ -32,10 +34,10 @@ public class FastrbidgeModeTopCommand extends TopCommand {
             List<MessageEmbed> embeds = new ArrayList<>();
 
             EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
-                    .setTitle("Top %s Fastbridge '%s' stats starting at offset %s".formatted(
+                    .setTitle("Top %s Fastbridge '%s' stats starting with #%s".formatted(
                             top.amount(),
                             mode,
-                            top.offset()
+                            top.offset()+1
                     ));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
@@ -44,7 +46,7 @@ public class FastrbidgeModeTopCommand extends TopCommand {
 
                 FastBridgePlayer stats = topStats.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(stats.getName(), """
+                MessageEmbed.Field field = new MessageEmbed.Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Time: %s
                         Replay Id: %s
                         Timestamp: %s
@@ -61,7 +63,7 @@ public class FastrbidgeModeTopCommand extends TopCommand {
                 embeds.add(builder1.build());
             }
 
-            evt.replyEmbeds(embeds).queue();
+            evt.getHook().sendMessageEmbeds(embeds).queue();
         });
     }
 }

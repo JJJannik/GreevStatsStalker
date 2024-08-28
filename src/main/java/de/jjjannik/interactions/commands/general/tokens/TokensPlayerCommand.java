@@ -16,7 +16,7 @@ public class TokensPlayerCommand extends PlayerCommand {
             evt.replyEmbeds(new EmbedBuilder()
                             .setColor(Color.GREEN)
                             .setTitle("Tokens of " + player.getName())
-                            .addField("Tokens", THOUSAND_SEPERATOR.format(tokens.getTokens()), false)
+                            .addField("Tokens", THOUSAND_SEPARATOR.format(tokens.getTokens()), false)
                             .build())
                     .queue();
         });

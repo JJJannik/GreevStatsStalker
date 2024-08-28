@@ -44,11 +44,11 @@ public class AdventTopCommand extends TopCommand {
             List<MessageEmbed> embeds = new ArrayList<>();
 
             EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
-                    .setTitle("Top %s Advent Jump&Run players of day %s in %s at offset %s".formatted(
+                    .setTitle("Top %s Advent Jump&Run players of day %s in %s starting with #%s".formatted(
                             top.amount(),
                             day,
                             year,
-                            top.offset()
+                            top.offset()+1
                     ));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
@@ -57,7 +57,7 @@ public class AdventTopCommand extends TopCommand {
 
                 JumpNRunPlayer stats = runTimes.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(stats.getName(), """
+                MessageEmbed.Field field = new MessageEmbed.Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Time: %s
                         Fails: %s
                         Checkpoints: %s

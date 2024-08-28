@@ -1,25 +1,61 @@
 package de.jjjannik.classes;
 
+import de.jjjannik.Main;
+import de.jjjannik.api.JGA;
 import de.jjjannik.classes.entities.RollingOptions;
 import de.jjjannik.entities.basic.Player;
+import de.jjjannik.interactions.Interaction;
+import de.jjjannik.utils.exceptions.APICallException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.awt.*;
-import java.util.function.Consumer;
+import java.util.UUID;
+import java.util.function.BiConsumer;
 
-public abstract class RollingPlayerCommand extends PlayerCommand {
+import static de.jjjannik.classes.PlayerCommand.UUID_REGEX;
 
-    protected void handleRollingPlayerCommand(SlashCommandInteractionEvent evt, Consumer<Player> playerConsumer, Consumer<RollingOptions> rollingConsumer) {
-        handlePlayerCommand(evt, playerConsumer);
+public abstract class RollingPlayerCommand implements Interaction {
+    protected final JGA jga = Main.getJga();
+
+    protected void handleRollingPlayerCommand(SlashCommandInteractionEvent evt, BiConsumer<Player, RollingOptions> args) {
+        String option = evt.getOption("player", OptionMapping::getAsString);
+        UUID uuid;
+
+        if (UUID_REGEX.matcher(option).matches()) {
+            uuid = UUID.fromString(option);
+        } else {
+            try {
+                uuid = jga.getPlayerUUID(option).getUuid();
+            } catch (Exception e) {
+                evt.replyEmbeds(new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .addField("❌ **No player found**", "The player with this uuid does not exist", false).build())
+                        .setEphemeral(true)
+                        .queue();
+                return;
+            }
+        }
+
+        Player player;
+        try {
+            player = new Player(jga.getPlayerMetaData(uuid).getJsonObject()); // don't question this, jga.getPlayerName(UUID) just times out if UUID is valid but there's no player with that uuid
+        } catch (APICallException e) {
+            evt.replyEmbeds(new EmbedBuilder()
+                            .setColor(Color.RED)
+                            .addField("❌ **No player found**", "This player either does not exist, never joined Greev.eu or doesn't have any stats in that gamemode", false).build())
+                    .setEphemeral(true)
+                    .queue();
+            return;
+        }
 
         long startTime;
         long endTime;
 
         try {
-            startTime = evt.getOption("start-timestamp", OptionMapping::getAsInt);
-            endTime = evt.getOption("end-timestamp", OptionMapping::getAsInt);
+            startTime = evt.getOption("start-timestamp", OptionMapping::getAsInt) * 1000L;
+            endTime = evt.getOption("end-timestamp", OptionMapping::getAsInt) * 1000L;
         } catch (ArithmeticException e) {
             evt.replyEmbeds(new EmbedBuilder()
                             .setColor(Color.RED)
@@ -38,6 +74,6 @@ public abstract class RollingPlayerCommand extends PlayerCommand {
             return;
         }
 
-        rollingConsumer.accept(new RollingOptions(startTime, endTime));
+        args.accept(player, new RollingOptions(startTime, endTime));
     }
 }

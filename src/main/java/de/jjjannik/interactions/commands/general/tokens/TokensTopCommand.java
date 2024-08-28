@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.jjjannik.classes.PlayerCommand.THOUSAND_SEPERATOR;
+import static de.jjjannik.classes.PlayerCommand.THOUSAND_SEPARATOR;
 
 public class TokensTopCommand extends TopCommand {
     @Override
@@ -20,7 +20,7 @@ public class TokensTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Tokens starting at offset " + top.offset());
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Tokens starting with #" + top.offset()+1);
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
@@ -29,8 +29,8 @@ public class TokensTopCommand extends TopCommand {
                 TokensPlayer stats = topStats.get(i);
 
                 MessageEmbed.Field field = new MessageEmbed.Field(
-                        stats.getName(),
-                        THOUSAND_SEPERATOR.format(stats.getTokens()),
+                        "#%s %s".formatted(top.offset()+i+1, stats.getName()),
+                        THOUSAND_SEPARATOR.format(stats.getTokens()),
                         true
                 );
 
