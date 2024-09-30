@@ -50,30 +50,38 @@ public abstract class RollingPlayerCommand implements Interaction {
             return;
         }
 
-        long startTime;
-        long endTime;
+        RollingOptions rolling = null;
+        OptionMapping start = evt.getOption("start-timestamp");
+        OptionMapping end = evt.getOption("end-timestamp");
 
-        try {
-            startTime = evt.getOption("start-timestamp", OptionMapping::getAsInt) * 1000L;
-            endTime = evt.getOption("end-timestamp", OptionMapping::getAsInt) * 1000L;
-        } catch (ArithmeticException e) {
-            evt.replyEmbeds(new EmbedBuilder()
-                            .setColor(Color.RED)
-                            .addField("❌ **Invalid Timestamp input**", "The timestamp inputs need to be provided in the unix seconds format. Click [here](https://www.unixtimestamp.com/) to read more.", false).build())
-                    .setEphemeral(true)
-                    .queue();
-            return;
+        if (start != null && end != null) {
+            long startTime;
+            long endTime;
+
+            try {
+                startTime = evt.getOption("start-timestamp").getAsInt();
+                endTime = evt.getOption("end-timestamp").getAsInt();
+            } catch (ArithmeticException e) {
+                evt.replyEmbeds(new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .addField("❌ **Invalid Timestamp input**", "The timestamp inputs need to be provided in the unix seconds format. Click [here](https://www.unixtimestamp.com/) to read more.", false).build())
+                        .setEphemeral(true)
+                        .queue();
+                return;
+            }
+
+            if (startTime < 0 || endTime < 0 || endTime < startTime) {
+                evt.replyEmbeds(new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .addField("❌ **Invalid Timestamp input**", "The timestamp inputs need to be greater 0 and the endTime has to be greater than the startTime", false).build())
+                        .setEphemeral(true)
+                        .queue();
+                return;
+            }
+
+            rolling = new RollingOptions(startTime, endTime);
         }
 
-        if (startTime < 0 || endTime < 0 || endTime < startTime) {
-            evt.replyEmbeds(new EmbedBuilder()
-                            .setColor(Color.RED)
-                            .addField("❌ **Invalid Timestamp input**", "The timestamp inputs need to be greater 0 and the endTime has to be greater than the startTime", false).build())
-                    .setEphemeral(true)
-                    .queue();
-            return;
-        }
-
-        args.accept(player, new RollingOptions(startTime, endTime));
+        args.accept(player, rolling);
     }
 }

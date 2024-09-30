@@ -24,16 +24,18 @@ public class MinesweeperBestFilteredCommand extends PlayerCommand {
             Generator gen = Generator.valueOf(genOption);
 
             MinesweeperBestPlayer timePlayer = jga.getFilteredBestMinesweeperTime(player.getUuid(), type, gen, mode);
-
             evt.replyEmbeds(new EmbedBuilder()
                     .setColor(Color.GREEN)
-                    .setTitle("Best Minesweeper time of %s in %s mode %s and %s generator:".formatted(
+                    .setTitle("Best Minesweeper time of %s in %s mode, %s difficulty and %s generator".formatted(
                             player.getName(),
-                            modeOption,
+                            modeOption == null ? "Default" : modeOption,
                             typeOption,
                             genOption
                     ))
-                    .addField("Time", MILLIS_TO_SECONDS.format(timePlayer.getTime() / 1000L), false).build()).queue();
+                    .addField("Time", MILLIS_TO_SECONDS.format(timePlayer.getTime() / 1000L), false)
+                    .addField("Game Id", String.valueOf(timePlayer.getRoundId()), false)
+                    .addField("Timestamp", timePlayer.getTimestamp(), false)
+                    .build()).queue();
         });
     }
 }

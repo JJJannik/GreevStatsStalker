@@ -145,6 +145,10 @@ public class Main {
                 new OptionData(OptionType.INTEGER, "start-timestamp", "Timestamp as start of tracked data", true),
                 new OptionData(OptionType.INTEGER, "end-timestamp", "Timestamp as end of tracked data", true)
         };
+        OptionData[] rollingOptionMs = {
+                new OptionData(OptionType.INTEGER, "start-timestamp", "Timestamp as start of tracked data", false),
+                new OptionData(OptionType.INTEGER, "end-timestamp", "Timestamp as end of tracked data", false)
+        };
         OptionData minesweeperMode = new OptionData(OptionType.STRING, "mode", "The Minesweeper playing mode", false).addChoices(
                 new Choice("Default", "DEFAULT"),
                 new Choice("Training", "TRAINING"),
@@ -447,19 +451,20 @@ public class Main {
                                         minesweeperType.setRequired(true),
                                         minesweeperGenerator.setRequired(true),
                                         minesweeperMode,
-                                        minesweeperCriteria,
-                                        rollingOption[0].setRequired(false),
-                                        rollingOption[1].setRequired(false)
-                                ),
+                                        minesweeperCriteria
+                                )
+                                .addOptions(rollingOptionMs),
                         new SubcommandData("player", "Get Minesweeper stats of player")
-                                .addOptions(playerOption, minesweeperMode),
+                                .addOptions(playerOption, minesweeperType, minesweeperGenerator, minesweeperMode)
+                                .addOptions(rollingOptionMs),
                         new SubcommandData("best", "Get best Minesweeper stats of player")
                                 .addOptions(playerOption, minesweeperMode),
                         new SubcommandData("best-filtered", "Get best Minesweeper stats of player with filter")
                                 .addOptions(playerOption, minesweeperType.setRequired(true), minesweeperGenerator.setRequired(true), minesweeperMode),
                         new SubcommandData("game", "Get Minesweeper game info")
                                 .addOption(OptionType.INTEGER, "id", "The game Id of your Minesweeper round", true)
-                )
+                ),
+                Commands.slash("about", "See information about the GreevStatsStalker bot")
         ).queue();
 
         registerAllCommands();

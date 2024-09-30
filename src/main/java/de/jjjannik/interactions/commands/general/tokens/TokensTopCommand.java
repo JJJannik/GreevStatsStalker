@@ -9,8 +9,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static de.jjjannik.classes.PlayerCommand.THOUSAND_SEPARATOR;
+import java.util.Locale;
 
 public class TokensTopCommand extends TopCommand {
     @Override
@@ -20,7 +19,7 @@ public class TokensTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Tokens starting with #" + top.offset()+1);
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " Tokens starting with #" + (top.offset()+1));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
@@ -30,7 +29,7 @@ public class TokensTopCommand extends TopCommand {
 
                 MessageEmbed.Field field = new MessageEmbed.Field(
                         "#%s %s".formatted(top.offset()+i+1, stats.getName()),
-                        THOUSAND_SEPARATOR.format(stats.getTokens()),
+                        String.format(Locale.US,"%,d", stats.getTokens()).replace(',', '\''),
                         true
                 );
 

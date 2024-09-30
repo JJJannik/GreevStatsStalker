@@ -2,7 +2,6 @@ package de.jjjannik.interactions.commands.knockpvp.lab;
 
 import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
-import de.jjjannik.utils.exceptions.APICallException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -14,11 +13,8 @@ public class KnockLabPlayerCommand extends PlayerCommand {
     public void execute(SlashCommandInteractionEvent evt) {
         handlePlayerCommand(evt, player -> {
             String experiment = evt.getOption("experiment", OptionMapping::getAsString);
-            KillsDeathsPlayer stats;
 
-            try {
-                stats = jga.getKnockPvPLabPlayer(player.getUuid(), experiment);
-            } catch (APICallException e) {
+            if (jga.getTopKnockPvPLab(experiment, 10, 0).isEmpty()) { // to check if experiment is valid
                 evt.replyEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .addField("❌ **No experiment found**", "This lab experiment does not exist", false).build())
@@ -26,6 +22,8 @@ public class KnockLabPlayerCommand extends PlayerCommand {
                         .queue();
                 return;
             }
+
+            KillsDeathsPlayer stats = jga.getKnockPvPLabPlayer(player.getUuid(), experiment);
 
             evt.replyEmbeds(new EmbedBuilder()
                             .setColor(Color.GREEN)

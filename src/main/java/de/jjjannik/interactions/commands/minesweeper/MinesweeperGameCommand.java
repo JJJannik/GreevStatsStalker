@@ -24,7 +24,7 @@ public class MinesweeperGameCommand implements Interaction {
 
             evt.replyEmbeds(new EmbedBuilder()
                             .setColor(Color.GREEN)
-                            .setTitle("Minesweeper game #" + gameId + " solved by ")
+                            .setTitle("Minesweeper game #" + gameId + " solved by " + jga.getPlayerName(game.getUuid()).getName())
                             .addField("Type", game.getType().toString(), true)
                             .addField("Generator", game.getGenerator().toString(), true)
                             .addField("Time", PlayerCommand.MILLIS_TO_SECONDS.format(game.getTime() / 1000D), true)
@@ -36,15 +36,12 @@ public class MinesweeperGameCommand implements Interaction {
                             .addField("Won", String.valueOf(game.isWon()), true)
                             .addField("X size", String.valueOf(game.getXSize()), true)
                             .addField("Z size", String.valueOf(game.getZSize()), true)
-                            .addField("", "", true)     // would look awful without this (on pc... on mobile it looks sh*t doesn't matter what I do)
-                            .addField("Game data", game.getGameData(), false)
-                            .addField("Game string", game.getGameString(), false)
                             .build())
                     .queue();
         } catch (APICallException e) {
             evt.replyEmbeds(new EmbedBuilder()
                     .setColor(Color.RED)
-                    .addField("❌ **No data**", "This player never completed a Minesweeper game in that mode", false)
+                    .addField("❌ **No data**", "No game with that ID found", false)
                     .build()
             ).setEphemeral(true).queue();
         }

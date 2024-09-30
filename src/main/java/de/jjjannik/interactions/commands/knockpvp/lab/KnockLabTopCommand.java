@@ -2,7 +2,6 @@ package de.jjjannik.interactions.commands.knockpvp.lab;
 
 import de.jjjannik.classes.TopCommand;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
-import de.jjjannik.utils.exceptions.APICallException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -17,11 +16,9 @@ public class KnockLabTopCommand extends TopCommand {
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
             String experiment = evt.getOption("experiment", OptionMapping::getAsString);
-            List<KillsDeathsPlayer> topStats;
+            List<KillsDeathsPlayer> topStats = jga.getTopKnockPvPLab(experiment, top.amount(), top.offset());;
 
-            try {
-                topStats = jga.getTopKnockPvPLab(experiment, top.amount(), top.offset());
-            } catch (APICallException e) {
+            if (topStats.isEmpty()) { // to check if experiment is valid
                 evt.replyEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .addField("❌ **No experiment found**", "This lab experiment does not exist", false).build())
@@ -32,7 +29,11 @@ public class KnockLabTopCommand extends TopCommand {
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " KnockPvP-Lab starting with #" + top.offset()+1);
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top %s KnockPvP-Lab '%s' starting with #%s".formatted(
+                    top.amount(),
+                    experiment,
+                    top.offset()+1
+            ));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {

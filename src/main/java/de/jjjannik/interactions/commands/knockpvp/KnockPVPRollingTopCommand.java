@@ -2,6 +2,8 @@ package de.jjjannik.interactions.commands.knockpvp;
 
 import de.jjjannik.classes.RollingTopCommand;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
+import de.jjjannik.requests.KnockPVP;
+import de.jjjannik.utils.exceptions.APITimeoutException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -15,16 +17,38 @@ public class KnockPVPRollingTopCommand extends RollingTopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleRollingTopCommand(evt, (top, rolling) -> {
-            List<KillsDeathsPlayer> topStats = jga.getRollingTopKnockPvP(top.amount(), top.offset(), rolling.startTime(), rolling.endTime());
+            evt.deferReply().queue();
+
+            List<KillsDeathsPlayer> topStats;
+            try {
+                topStats = jga.getRollingTopKnockPvP(top.amount(), top.offset(), rolling.startTime(), rolling.endTime());
+            } catch (APITimeoutException e) {
+                evt.getHook().sendMessageEmbeds(new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .addField("❌ **API Call exception**", "The response of the Greev API took too long, try again or click [here](%s)"
+                                        .formatted(KnockPVP.GET_ROLLING_TOP.getUrl().formatted(top.amount(), top.offset(), rolling.startTime(), rolling.endTime())), false).build())
+                        .setEphemeral(true)
+                        .queue();
+                return;
+            }
 
             List<MessageEmbed> embeds = new ArrayList<>();
+
+            if (topStats.isEmpty()) {
+                evt.getHook().sendMessageEmbeds(new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .addField("❌ **No stats found**", "No stats can be found for your specified arguments", false).build())
+                        .setEphemeral(true)
+                        .queue();
+                return;
+            }
 
             EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
                     .setTitle("Top %s KnockPVP player starting with #%s from %s to %s".formatted(
                             top.amount(),
                             top.offset()+1,
-                            TimeFormat.DATE_TIME_SHORT.format(rolling.startTime()),
-                            TimeFormat.DATE_TIME_SHORT.format(rolling.endTime())
+                            TimeFormat.DATE_TIME_SHORT.format(rolling.startTime() * 1000),
+                            TimeFormat.DATE_TIME_SHORT.format(rolling.endTime() * 1000)
                     ));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
@@ -49,8 +73,7 @@ public class KnockPVPRollingTopCommand extends RollingTopCommand {
                 embeds.add(builder1.build());
             }
 
-            evt.replyEmbeds(embeds).queue();
+            evt.getHook().sendMessageEmbeds(embeds).queue();
         });
-
     }
 }

@@ -1,7 +1,7 @@
 package de.jjjannik.interactions.commands.minesweeper;
 
 import de.jjjannik.classes.RollingTopCommand;
-import de.jjjannik.entities.minesweeper.MinesweeperTimeEntry;
+import de.jjjannik.entities.minesweeper.MinesweeperTopEntry;
 import de.jjjannik.requests.Minesweeper.Generator;
 import de.jjjannik.requests.Minesweeper.Mode;
 import de.jjjannik.requests.Minesweeper.RankingCriteria;
@@ -31,13 +31,13 @@ public class MinesweeperTopCommand extends RollingTopCommand {
             Mode mode = modeOption == null ? null : Mode.valueOf(modeOption);
             RankingCriteria criteria = criteriaOption == null ? null : RankingCriteria.valueOf(criteriaOption);
 
-            List<MinesweeperTimeEntry> topTimes = jga.getTopMinesweeperTimes(
+            List<MinesweeperTopEntry> topTimes = jga.getTopMinesweeperTimes(
                     top.amount(),
                     top.offset(),
                     mode,
                     criteria,
-                    rolling.startTime(),
-                    rolling.endTime(),
+                    rolling == null ? null : rolling.startTime(),
+                    rolling == null ? null : rolling.endTime(),
                     type,
                     gen
             );
@@ -60,9 +60,11 @@ public class MinesweeperTopCommand extends RollingTopCommand {
                     embeds.add(builder.build());
                     builder.clearFields().setTitle(null);
                 }
-                MinesweeperTimeEntry stats = topTimes.get(i - 1);
+                MinesweeperTopEntry stats = topTimes.get(i - 1);
 
-                builder.addField(stats.getName(), MILLIS_TO_SECONDS.format(stats.getTime() / 1000L), true);
+                builder.addField(stats.getName(),
+                        stats.getTime() != null ? MILLIS_TO_SECONDS.format(stats.getTime() / 1000L) : String.valueOf(stats.getMastery()),
+                        true);
             }
             embeds.add(builder.build());
             evt.replyEmbeds(embeds).queue();

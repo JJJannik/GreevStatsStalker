@@ -61,7 +61,7 @@ public class AdventTopCommand extends TopCommand {
                         Time: %s
                         Fails: %s
                         Checkpoints: %s
-                        """.formatted(MILLIS_TO_SECONDS.format(stats.getTime()/ 1000L), stats.getFails(), stats.getCheckpoints()), true);
+                        """.formatted(MILLIS_TO_SECONDS.format(stats.getTime()/1000d), stats.getFails(), stats.getCheckpoints()), true);
 
                 if (i < 25) {
                     builder.addField(field);

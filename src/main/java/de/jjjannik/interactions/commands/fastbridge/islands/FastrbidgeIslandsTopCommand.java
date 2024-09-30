@@ -23,7 +23,7 @@ public class FastrbidgeIslandsTopCommand extends TopCommand {
             List<MessageEmbed> embeds = new ArrayList<>();
 
             EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
-                    .setTitle("Top %s Fastbridge Island `%s` stats starting with #%s".formatted(
+                    .setTitle("Top %s Fastbridge Island '%s' stats starting with #%s".formatted(
                             top.amount(),
                             map,
                             top.offset()+1

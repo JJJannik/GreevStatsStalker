@@ -2,8 +2,10 @@ package de.jjjannik.interactions.commands.advent;
 
 import de.jjjannik.classes.PlayerCommand;
 import de.jjjannik.entities.jumpnrun.JumpNRunTime;
+import de.jjjannik.requests.AdventJnRs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -29,34 +31,42 @@ public class AdventYearCommand extends PlayerCommand {
             }
 
             List<MessageEmbed> embeds = new ArrayList<>();
+            boolean done = false;
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN)
-                    .setTitle("Advent Jump&Run times of %s in %s".formatted(player.getName(), year));
-            EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
+            for (int e = 0; e < 5; e++) {
+                if (done) break;
 
-            for (int i = 0; i < 50; i++) {
-                if (runTimes.size() == i) break;
+                EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN);
 
-                JumpNRunTime stats = runTimes.get(i);
+                if (e == 0) {
+                    builder.setTitle("Advent Jump&Run times of %s in %s".formatted(player.getName(), year));
+                }
 
-                MessageEmbed.Field field = new MessageEmbed.Field("Door %s: %s".formatted(i+1, MILLIS_TO_SECONDS.format(stats.getTime()/1000L)), """
+                for (int f = 0; f < 25; f++) {
+                    int index = e * 10 + f;
+                    if (runTimes.size() == index) {
+                        done = true;
+                        break;
+                    }
+
+                    JumpNRunTime stats = runTimes.get(index);
+
+                    MessageEmbed.Field field = new MessageEmbed.Field("Door %s".formatted(stats.getJumpAndRunId()), """
+                        Time: %s
                         Fails: %s
                         Checkpoints: %s
-                        """.formatted(stats.getFails(), stats.getCheckpoints()), true);
+                        """.formatted(MILLIS_TO_SECONDS.format(stats.getTime()/1000d), stats.getFails(), stats.getCheckpoints()), true);
 
-                if (i < 25) {
                     builder.addField(field);
-                } else {
-                    builder1.addField(field);
                 }
-            }
-            embeds.add(builder.build());
-            if (!builder1.getFields().isEmpty()) {
-                embeds.add(builder1.build());
+
+                embeds.add(builder.build());
             }
 
-            evt.replyEmbeds(embeds).queue();
+            evt.replyEmbeds(embeds).queue(s -> ((TextChannel) s.getInteraction().getChannel()).sendMessage("""
+                    **Note:** Due to Discord limitations, this message can only show up to 125 times.
+                    Click [here](%s) to see all of the player times of this year.
+                    """.formatted(AdventJnRs.GET_ALL_PLAYER.getUrl().formatted(player.getUuid(), year))).queue());
         });
-
     }
 }

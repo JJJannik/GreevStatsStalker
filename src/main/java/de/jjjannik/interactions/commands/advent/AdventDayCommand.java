@@ -50,7 +50,7 @@ public class AdventDayCommand extends PlayerCommand {
 
                 JumpNRunTime stats = runTimes.get(i);
 
-                MessageEmbed.Field field = new MessageEmbed.Field(MILLIS_TO_SECONDS.format(stats.getTime()/1000L), """
+                MessageEmbed.Field field = new MessageEmbed.Field(MILLIS_TO_SECONDS.format(stats.getTime()/1000d), """
                         Fails: %s
                         Checkpoints: %s
                         """.formatted(stats.getFails(), stats.getCheckpoints()), true);

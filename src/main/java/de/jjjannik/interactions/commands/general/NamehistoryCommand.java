@@ -5,6 +5,7 @@ import de.jjjannik.entities.NameHistoryEntry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class NamehistoryCommand extends PlayerCommand {
                     builder.clearFields().setTitle(null);
                 }
                 NameHistoryEntry entry = nameHistory.get(i - 1);
-                builder.addField(entry.getName(), formatTimestamp(entry.getChangedToAt(), true), false);
+                builder.addField(MarkdownSanitizer.escape(entry.getName()), formatTimestamp(entry.getChangedToAt(), true), false);
             }
             embeds.add(builder.build());
             evt.replyEmbeds(embeds).queue();

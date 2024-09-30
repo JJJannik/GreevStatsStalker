@@ -1,7 +1,7 @@
 package de.jjjannik.interactions.commands.minigames.one_vs_one;
 
 import de.jjjannik.classes.TopCommand;
-import de.jjjannik.entities.basic.PvPPlayer;
+import de.jjjannik.entities.basic.KillsDeathsPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -14,24 +14,22 @@ public class OneVsOneTopCommand extends TopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
-            List<PvPPlayer> topStats = jga.getTop1vs1(top.amount(), top.offset());
+            List<KillsDeathsPlayer> topStats = jga.getTop1vs1(top.amount(), top.offset());
 
             List<MessageEmbed> embeds = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " 1vs1 player starting with #" + top.offset()+1);
+            EmbedBuilder builder = new EmbedBuilder().setColor(Color.GREEN).setTitle("Top " + top.amount() + " 1vs1 player starting with #" + (top.offset()+1));
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             for (int i = 0; i < 50; i++) {
                 if (topStats.size() == i) break;
 
-                PvPPlayer stats = topStats.get(i);
+                KillsDeathsPlayer stats = topStats.get(i);
 
                 MessageEmbed.Field field = new MessageEmbed.Field("#%s %s".formatted(top.offset()+i+1, stats.getName()), """
                         Kills: %s
                         Deaths: %s
-                        Wins: %s
-                        Loses: %s
-                        """.formatted(stats.getKills(), stats.getDeaths(), stats.getWins(), stats.getLoses()), true);
+                        """.formatted(stats.getKills(), stats.getDeaths()), true);
 
                 if (i < 25) {
                     builder.addField(field);

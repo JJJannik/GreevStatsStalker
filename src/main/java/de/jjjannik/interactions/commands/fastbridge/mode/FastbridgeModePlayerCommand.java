@@ -27,7 +27,7 @@ public class FastbridgeModePlayerCommand extends PlayerCommand {
 
              evt.replyEmbeds(new EmbedBuilder()
                              .setColor(Color.GREEN)
-                             .setTitle("Fastbridge %s stats of %s".formatted(mode, player.getName()))
+                             .setTitle("Fastbridge '%s' stats of %s".formatted(mode, player.getName()))
                              .addField("Time", String.valueOf(fastBridgePlayer.getTime()), false)
                              .addField("Replay Id", fastBridgePlayer.getReplayId(), false)
                              .addField("Timestamp", fastBridgePlayer.getTimestamp(), false)

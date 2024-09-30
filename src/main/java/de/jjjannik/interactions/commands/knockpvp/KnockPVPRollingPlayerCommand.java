@@ -20,8 +20,8 @@ public class KnockPVPRollingPlayerCommand extends RollingPlayerCommand {
                             .setColor(Color.GREEN)
                             .setTitle("KnockPvP stats of %s from %s to %s".formatted(
                                     player.getName(),
-                                    TimeFormat.DATE_TIME_SHORT.format(rolling.startTime()),
-                                    TimeFormat.DATE_TIME_SHORT.format(rolling.endTime())
+                                    TimeFormat.DATE_TIME_SHORT.format(rolling.startTime() * 1000),
+                                    TimeFormat.DATE_TIME_SHORT.format(rolling.endTime() * 1000)
                             ))
                             .addField("Kills", String.valueOf(stats.getKills()), true)
                             .addField("Deaths", String.valueOf(stats.getDeaths()), true)

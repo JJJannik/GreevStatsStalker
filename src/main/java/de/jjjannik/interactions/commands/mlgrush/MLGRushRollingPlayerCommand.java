@@ -20,8 +20,8 @@ public class MLGRushRollingPlayerCommand extends RollingPlayerCommand {
                             .setColor(Color.GREEN)
                             .setTitle("MLGRush stats of %s from %s to %s".formatted(
                                     player.getName(),
-                                    TimeFormat.DATE_TIME_SHORT.format(rolling.startTime()),
-                                    TimeFormat.DATE_TIME_SHORT.format(rolling.endTime())
+                                    TimeFormat.DATE_TIME_SHORT.format(rolling.startTime() * 1000),
+                                    TimeFormat.DATE_TIME_SHORT.format(rolling.endTime() * 1000)
                             ))
                             .addField("Wins", String.valueOf(stats.getWins()), true)
                             .addField("Loses", String.valueOf(stats.getLoses()), true)
