@@ -13,8 +13,10 @@ jobs:
         with:
           distribution: 'adopt-hotspot'
           java-version: '17'
+
       - name: Build everything with Gradle
         run: gradle shadowJar
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -26,11 +28,13 @@ jobs:
           body: "Automatic release"
           draft: true
           prerelease: false
-      - name: Upload Artifact
-        id: upload-release-asset
+
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/libs/
+          asset_path: ./build/libs/greev-stats-stalker-${{ github.ref_name }}.jar
+          asset_name: greev-stats-stalker-${{ github.ref_name }}.jar
+          asset_content_type: application/java-archive
