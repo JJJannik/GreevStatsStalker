@@ -9,18 +9,17 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.awt.*;
 import java.time.DateTimeException;
 import java.time.Instant;
-import java.util.concurrent.TimeUnit;
 
 public class KnockPVPDaysCommand extends PlayerCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handlePlayerCommand(evt, player -> {
-            int days = evt.getOption("days", OptionMapping::getAsInt);
+            double days = evt.getOption("days", OptionMapping::getAsDouble);
 
-            if (days < 1) {
+            if (days <= 0) {
                 evt.replyEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
-                                .addField("❌ **Incorrect option**", "Option 'days' can't be smaller 1", false).build())
+                                .addField("❌ **Incorrect option**", "Option 'days' can't be smaller or equal to 0", false).build())
                         .setEphemeral(true)
                         .queue();
                 return;
@@ -29,7 +28,7 @@ public class KnockPVPDaysCommand extends PlayerCommand {
             Instant now = Instant.now();
             Instant lastDay;
             try {
-                lastDay = now.minusSeconds(TimeUnit.DAYS.toSeconds(days));
+                lastDay = now.minusSeconds((int) (days * 24 * 60 * 60)); // days * 24 * 60 * 60
             } catch (DateTimeException e) {
                 evt.replyEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)

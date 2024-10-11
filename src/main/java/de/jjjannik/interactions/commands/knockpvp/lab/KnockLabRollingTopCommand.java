@@ -18,10 +18,11 @@ public class KnockLabRollingTopCommand extends RollingTopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleRollingTopCommand(evt, (top, rolling) -> {
+            evt.deferReply().queue();
             String experiment = evt.getOption("experiment", OptionMapping::getAsString);
 
             if (jga.getTopKnockPvPLab(experiment, 10, 0).isEmpty()) { // to check if experiment is valid
-                evt.replyEmbeds(new EmbedBuilder()
+                evt.getHook().sendMessageEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .addField("❌ **No experiment found**", "This lab experiment does not exist", false).build())
                         .setEphemeral(true)
@@ -43,7 +44,7 @@ public class KnockLabRollingTopCommand extends RollingTopCommand {
             }
 
             if (topStats.isEmpty()) {
-                evt.replyEmbeds(new EmbedBuilder()
+                evt.getHook().sendMessageEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .addField("❌ **No stats found**", "No stats can be found for your specified arguments", false).build())
                         .setEphemeral(true)
@@ -84,7 +85,7 @@ public class KnockLabRollingTopCommand extends RollingTopCommand {
                 embeds.add(builder1.build());
             }
 
-            evt.replyEmbeds(embeds).queue();
+            evt.getHook().sendMessageEmbeds(embeds).queue();
         });
     }
 }

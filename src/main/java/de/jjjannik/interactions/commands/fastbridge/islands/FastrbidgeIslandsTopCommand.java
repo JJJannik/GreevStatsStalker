@@ -16,6 +16,7 @@ public class FastrbidgeIslandsTopCommand extends TopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
+            evt.deferReply().queue();
             String map = evt.getOption("map", OptionMapping::getAsString);
 
             List<FastBridgeIslandsPlayer> topStats = jga.getTopFastbridgeIslands(FastbridgeIslands.Map.valueOf(map), top.amount(), top.offset());
@@ -52,7 +53,7 @@ public class FastrbidgeIslandsTopCommand extends TopCommand {
                 embeds.add(builder1.build());
             }
 
-            evt.replyEmbeds(embeds).queue();
+            evt.getHook().sendMessageEmbeds(embeds).queue();
         });
     }
 }

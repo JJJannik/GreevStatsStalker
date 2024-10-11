@@ -17,6 +17,7 @@ public class MLGRushRollingTopCommand extends RollingTopCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handleRollingTopCommand(evt, (top, rolling) -> {
+            evt.deferReply().queue();
             List<MLGRushPlayer> topStats;
             try {
                 topStats = jga.getRollingTopMLGRush(top.amount(), top.offset(), rolling.startTime(), rolling.endTime());
@@ -42,7 +43,7 @@ public class MLGRushRollingTopCommand extends RollingTopCommand {
             EmbedBuilder builder1 = new EmbedBuilder().setColor(Color.GREEN);
 
             if (topStats.isEmpty()) {
-                evt.replyEmbeds(new EmbedBuilder()
+                evt.getHook().sendMessageEmbeds(new EmbedBuilder()
                                 .setColor(Color.RED)
                                 .addField("❌ **No stats found**", "No stats can be found for your specified arguments", false).build())
                         .setEphemeral(true)
@@ -73,7 +74,7 @@ public class MLGRushRollingTopCommand extends RollingTopCommand {
                 embeds.add(builder1.build());
             }
 
-            evt.replyEmbeds(embeds).queue();
+            evt.getHook().sendMessageEmbeds(embeds).queue();
         });
     }
 }

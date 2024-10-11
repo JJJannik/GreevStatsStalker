@@ -13,12 +13,13 @@ public class KnockPVPYearlyCommand extends PlayerCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handlePlayerCommand(evt, player -> {
+            evt.deferReply().queue();
             Instant now = Instant.now();
             Instant lastDay = now.minusSeconds(TimeUnit.DAYS.toSeconds(365));
 
             KillsDeathsPlayer stats = jga.getRollingKnockPvPPlayer(player.getUuid(), lastDay.getEpochSecond(), now.getEpochSecond());
 
-            evt.replyEmbeds(new EmbedBuilder()
+            evt.getHook().sendMessageEmbeds(new EmbedBuilder()
                             .setColor(Color.GREEN)
                             .setTitle("Yearly KnockPVP stats of " + player.getName())
                             .addField("Kills", String.valueOf(stats.getKills()), true)

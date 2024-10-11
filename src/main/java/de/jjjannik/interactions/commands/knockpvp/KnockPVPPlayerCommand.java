@@ -11,9 +11,10 @@ public class KnockPVPPlayerCommand extends PlayerCommand {
     @Override
     public void execute(SlashCommandInteractionEvent evt) {
         handlePlayerCommand(evt, player -> {
+            evt.deferReply().queue();
             KnockPVPPlayer stats = jga.getKnockPvPPlayer(player.getUuid());
 
-            evt.replyEmbeds(new EmbedBuilder()
+            evt.getHook().sendMessageEmbeds(new EmbedBuilder()
                             .setColor(Color.GREEN)
                             .setTitle("KnockPVP stats of " + player.getName())
                             .addField("Rank", String.valueOf(stats.getRank()), true)

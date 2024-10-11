@@ -424,7 +424,7 @@ public class Main {
                                         .addOptions(playerOption),
                                 new SubcommandData("days", "Get KnockPVP stats of player of last N days")
                                         .addOptions(playerOption)
-                                        .addOption(OptionType.INTEGER, "days", "Number of last days to return data from", true)
+                                        .addOption(OptionType.NUMBER, "days", "Number of last days to return data from", true)
                         ),
                 Commands.slash("knockpvp-lab", "Get KnockPVP-Lab stats from experiment")
                         .addSubcommands(
@@ -481,6 +481,7 @@ public class Main {
             }
             log.info("With {} subcommands", subCommands.get());
         });
+        log.info("This bot joined {} guilds", jda.getGuilds().size());
     }
 
     private static File getResourceAsFile(String resourcePath) {
