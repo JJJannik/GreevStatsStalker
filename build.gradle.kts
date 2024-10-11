@@ -21,6 +21,8 @@ dependencies {
     implementation("me.carleslc.Simple-YAML", "Simple-Yaml", "1.8.3")
     implementation("com.github.JJJannik", "JGA", "1.2.0")
 
+    implementation(files("./xchart-3.8.8.jar"))
+
     compileOnly("org.projectlombok", "lombok", "1.18.24")
     annotationProcessor("org.projectlombok", "lombok", "1.18.24")
 }

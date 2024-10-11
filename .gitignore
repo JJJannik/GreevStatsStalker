@@ -5,3 +5,4 @@ GreevStatsStalker/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+xchart-3.8.8.jar
