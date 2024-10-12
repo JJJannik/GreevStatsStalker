@@ -104,21 +104,24 @@ public class Main {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         JDA jda = null;
 
-        File file = new File("./GreevStatsStalker/config.yml");
-        new File("./GreevStatsStalker").mkdirs();
-        if (!file.exists()) {
-            getResourceAsFile("config.yml").renameTo(file);
-        }
-        YamlFile config = YamlFile.loadConfiguration(file);
+        String token = System.getenv("token");
+        if (token == null) {
+            File file = new File("./GreevStatsStalker/config.yml");
+            new File("./GreevStatsStalker").mkdirs();
+            if (!file.exists()) {
+                getResourceAsFile("config.yml").renameTo(file);
+            }
+            YamlFile config = YamlFile.loadConfiguration(file);
 
-        if (!config.isSet("botToken") || Strings.isEmpty(config.get("botToken").toString())) {
-            log.error("No valid config provided! Please add a correct property with the path `botToken`\nIf you feel unsure, take a look into the default config");
-            System.exit(1);
+            if (!config.isSet("botToken") || Strings.isEmpty(config.get("botToken").toString())) {
+                log.error("No valid config provided! Please add a correct property with the path `botToken`\nIf you feel unsure, take a look into the default config");
+                System.exit(1);
+            }
+            token = config.getString("botToken");
         }
 
         try {
-            jda = JDABuilder.create(config.getString("botToken"),
-                            List.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES))
+            jda = JDABuilder.create(token, List.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES))
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
                     .setActivity(Activity.watching(" your Greev Stats."))
                     .setChunkingFilter(ChunkingFilter.ALL).setMemberCachePolicy(MemberCachePolicy.NONE)
