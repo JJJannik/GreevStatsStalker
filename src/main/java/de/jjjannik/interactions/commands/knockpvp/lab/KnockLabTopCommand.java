@@ -16,7 +16,7 @@ public class KnockLabTopCommand extends TopCommand {
     public void execute(SlashCommandInteractionEvent evt) {
         handleTopCommand(evt, top -> {
             String experiment = evt.getOption("experiment", OptionMapping::getAsString);
-            List<KillsDeathsPlayer> topStats = jga.getTopKnockPvPLab(experiment, top.amount(), top.offset());;
+            List<KillsDeathsPlayer> topStats = jga.getTopKnockPvPLab(experiment, top.amount(), top.offset());
 
             if (topStats.isEmpty()) { // to check if experiment is valid
                 evt.replyEmbeds(new EmbedBuilder()

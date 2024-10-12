@@ -19,7 +19,7 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-api", "2.19.0")
     implementation("org.apache.logging.log4j", "log4j-core", "2.19.0")
     implementation("me.carleslc.Simple-YAML", "Simple-Yaml", "1.8.3")
-    implementation("com.github.JJJannik", "JGA", "1.2.0")
+    implementation("com.github.JJJannik", "JGA", "1.2.1")
 
     implementation(files("./xchart-3.8.8.jar"))
 

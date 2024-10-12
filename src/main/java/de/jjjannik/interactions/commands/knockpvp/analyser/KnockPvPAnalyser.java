@@ -3,10 +3,12 @@ package de.jjjannik.interactions.commands.knockpvp.analyser;
 import de.jjjannik.JGAInitializer;
 import de.jjjannik.api.JGA;
 import de.jjjannik.classes.DarkTheme;
-import de.jjjannik.classes.entities.KDStatsEntity;
+import de.jjjannik.classes.entities.KnockPvPAnalyseEntity;
+import de.jjjannik.classes.entities.SeriesType;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
 import de.jjjannik.entities.basic.Player;
 import de.jjjannik.utils.exceptions.APICallException;
+import de.jjjannik.utils.exceptions.APITimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchart.*;
@@ -18,6 +20,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,56 +29,54 @@ public class KnockPvPAnalyser {
     private final Player player;
     private final JGA jga;
 
-    public static void main(String[] args) {
-        JGAInitializer.init();
-        JGA jga = JGAInitializer.getJGA();
-
-        KnockPvPAnalyser analyser = new KnockPvPAnalyser(jga.getPlayerUUID(""), jga);
-
-        List<KDStatsEntity> data = analyser.retrieveStats(365*2, 7);
-
-        analyser.createKDStatsChart(data);
-    }
-
-    public List<KDStatsEntity> retrieveStats(int sinceDays, int periodDays) {
-        List<KDStatsEntity> data = new ArrayList<>();
+    public List<KnockPvPAnalyseEntity> retrieveStats(int sinceDays, int periodDays) throws APITimeoutException {
+        List<KnockPvPAnalyseEntity> data = new ArrayList<>();
 
         Instant now = Instant.now(Clock.systemUTC());
 
-        data.add(new KDStatsEntity(Date.from(now.minusSeconds(TimeUnit.DAYS.toSeconds(sinceDays))), 0));
+        data.add(new KnockPvPAnalyseEntity(Date.from(now.minusSeconds(TimeUnit.DAYS.toSeconds(sinceDays))), 0, 0));
+
+        int killsInPeriod = 0;
 
         for (long i = now.minusSeconds(TimeUnit.DAYS.toSeconds(sinceDays)).getEpochSecond(); (i+TimeUnit.DAYS.toSeconds(periodDays)) < now.getEpochSecond(); i += TimeUnit.DAYS.toSeconds(periodDays)) {
 
-            KDStatsEntity statsEntity;
+            KnockPvPAnalyseEntity statsEntity;
             try {
                 KillsDeathsPlayer stats = jga.getRollingKnockPvPPlayer(player.getUuid(), i, i + TimeUnit.DAYS.toSeconds(periodDays));
 
-                statsEntity = new KDStatsEntity(Date.from(Instant.ofEpochSecond(i)), (float) stats.getKills() / (stats.getDeaths() == 0 ? 1 : stats.getDeaths()));
+                killsInPeriod += stats.getKills();
+
+                statsEntity = new KnockPvPAnalyseEntity(Date.from(Instant.ofEpochSecond(i)), killsInPeriod, (float) stats.getKills() / (stats.getDeaths() == 0 ? 1 : stats.getDeaths()));
             } catch (APICallException e) {
-                statsEntity = data.get(data.size() - 1);
+                statsEntity = data.get(data.size() - 1).clone();
             }
 
             data.add(statsEntity);
 
             long sysMillis = System.currentTimeMillis();
-            while (System.currentTimeMillis() - sysMillis < 1000) {
+            while (System.currentTimeMillis() - sysMillis < 1500) {
                 // -> delay to avoid API rate limit
             }
         }
+        int killsDiff = jga.getKnockPvPPlayer(player.getUuid()).getKills() - killsInPeriod;
+
+        data.forEach(e -> e.setKills(e.getKills() + killsDiff));
+
         return data;
     }
 
-    public void createKDStatsChart(List<KDStatsEntity> data) {
+    public void createKDStatsChart(List<KnockPvPAnalyseEntity> data, SeriesType type) {
         final XYChart chart = new XYChartBuilder()
                 .width(700)
                 .height(600)
-                .title("Trend of the K/D ratio of %s from %s to %s".formatted(
+                .title("Trend of the KnockPvP %s of %s from %s to %s".formatted(
+                        type.getChartLabel(),
                         this.player.getName(),
-                        dateFormat.format(data.get(0).date()),
-                        dateFormat.format(data.get(data.size()-1).date())
+                        dateFormat.format(data.get(0).getDate()),
+                        dateFormat.format(data.get(data.size()-1).getDate())
                 ))
                 .xAxisTitle("Date")
-                .yAxisTitle("K/D Ratio")
+                .yAxisTitle(type.getChartLabel())
                 .build();
 
         XYStyler styler = chart.getStyler();
@@ -85,13 +86,13 @@ public class KnockPvPAnalyser {
         styler.setLocale(Locale.US);
         styler.setTimezone(TimeZone.getTimeZone("UTC"));
 
-        chart.addSeries("K/D",
-                data.stream().map(KDStatsEntity::date).toList(),
-                data.stream().map(KDStatsEntity::kd).toList()
+        chart.addSeries(type.getChartLabel(),
+                data.stream().map(KnockPvPAnalyseEntity::getDate).toList(),
+                data.stream().map(type.getMapper()).toList()
         );
 
         try {
-            BitmapEncoder.saveBitmapWithDPI(chart, "./temp-unique-name", BitmapEncoder.BitmapFormat.PNG, 300);
+            BitmapEncoder.saveBitmapWithDPI(chart, "./" + player.getName(), BitmapEncoder.BitmapFormat.PNG, 300);
         } catch (IOException e) {
             log.error("Could not create image from chart", e);
         }
