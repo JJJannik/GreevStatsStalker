@@ -1,10 +1,10 @@
 package de.jjjannik.interactions.commands.knockpvp.analyser;
 
-import de.jjjannik.JGAInitializer;
 import de.jjjannik.api.JGA;
 import de.jjjannik.classes.DarkTheme;
 import de.jjjannik.classes.entities.KnockPvPAnalyseEntity;
 import de.jjjannik.classes.entities.SeriesType;
+import de.jjjannik.entities.KnockPVPPlayer;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
 import de.jjjannik.entities.basic.Player;
 import de.jjjannik.utils.exceptions.APICallException;
@@ -20,7 +20,6 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,6 +60,37 @@ public class KnockPvPAnalyser {
         int killsDiff = jga.getKnockPvPPlayer(player.getUuid()).getKills() - killsInPeriod;
 
         data.forEach(e -> e.setKills(e.getKills() + killsDiff));
+
+        return data;
+    }
+
+    public List<KnockPvPAnalyseEntity> developPrognosis(Player player, List<KnockPvPAnalyseEntity> data, int untilDays) {
+        float sumKD = 0;
+        long sumKills = 0;
+
+        for (KnockPvPAnalyseEntity e : data) {
+            sumKD += e.getKd();
+            sumKills += e.getKills();
+        }
+
+        KnockPVPPlayer stats = jga.getKnockPvPPlayer(player.getUuid());
+
+        float avgKD = sumKD / data.size();  // average per time period (based on input data)
+        long avgKills = sumKills / data.size();
+
+        Instant now = Instant.now();
+        int timePeriod = (int)  (data.get(1).getDate().getTime() -  data.get(0).getDate().getTime())/1000;
+
+        int k = 0;
+        for (long i = now.getEpochSecond(); i < TimeUnit.DAYS.toSeconds(untilDays); i+=timePeriod) {
+            k++;
+
+            data.add(new KnockPvPAnalyseEntity(
+                    Date.from(Instant.ofEpochSecond(i)),
+                    stats.getKills() + (k * avgKills),
+                    ((float) stats.getKills() / stats.getDeaths()) + (k * avgKD)
+            ));
+        }
 
         return data;
     }
