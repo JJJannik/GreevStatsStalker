@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 @Getter
 @RequiredArgsConstructor
-public enum SeriesType {
+public enum StatsType {
     KD("K/D Ratio", KnockPvPAnalyseEntity::getKd),
     KILLS("Kills", KnockPvPAnalyseEntity::getKills);
 

@@ -1,9 +1,9 @@
-package de.jjjannik.interactions.commands.knockpvp.analyser;
+package de.jjjannik.classes;
 
+import de.jjjannik.JGAInitializer;
 import de.jjjannik.api.JGA;
-import de.jjjannik.classes.DarkTheme;
 import de.jjjannik.classes.entities.KnockPvPAnalyseEntity;
-import de.jjjannik.classes.entities.SeriesType;
+import de.jjjannik.classes.entities.StatsType;
 import de.jjjannik.entities.KnockPVPPlayer;
 import de.jjjannik.entities.basic.KillsDeathsPlayer;
 import de.jjjannik.entities.basic.Player;
@@ -27,6 +27,21 @@ public class KnockPvPAnalyser {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private final Player player;
     private final JGA jga;
+
+    public static void main(String[] args) {
+        JGAInitializer.init();
+        JGA jga = JGAInitializer.getJGA();
+
+        KnockPvPAnalyser analyser = new KnockPvPAnalyser(jga.getPlayerUUID("JJJannik"), jga);
+
+        List<KnockPvPAnalyseEntity> analysis = analyser.retrieveStats(364, 7);
+
+        analyser.createKnockPvPStatsChart(analysis, StatsType.KD, "analysis");
+
+        List<KnockPvPAnalyseEntity> prognosis = analyser.developPrognosis(analysis, 70);
+
+        analyser.createKnockPvPStatsChart(prognosis, StatsType.KD, "prognosis");
+    }
 
     public List<KnockPvPAnalyseEntity> retrieveStats(int sinceDays, int periodDays) throws APITimeoutException {
         List<KnockPvPAnalyseEntity> data = new ArrayList<>();
@@ -64,38 +79,42 @@ public class KnockPvPAnalyser {
         return data;
     }
 
-    public List<KnockPvPAnalyseEntity> developPrognosis(Player player, List<KnockPvPAnalyseEntity> data, int untilDays) {
+    public List<KnockPvPAnalyseEntity> developPrognosis(List<KnockPvPAnalyseEntity> data, int untilDays) {
         float sumKD = 0;
         long sumKills = 0;
 
-        for (KnockPvPAnalyseEntity e : data) {
-            sumKD += e.getKd();
-            sumKills += e.getKills();
-        }
+        List<KnockPvPAnalyseEntity> prognosis = new ArrayList<>();
 
         KnockPVPPlayer stats = jga.getKnockPvPPlayer(player.getUuid());
+
+        for (int i = data.size()-1; i >= 0; i--) {
+            sumKD += data.get(i).getKd();
+            sumKills += stats.getKills() - data.get(i).getKills() - sumKills;
+        }
 
         float avgKD = sumKD / data.size();  // average per time period (based on input data)
         long avgKills = sumKills / data.size();
 
         Instant now = Instant.now();
-        int timePeriod = (int)  (data.get(1).getDate().getTime() -  data.get(0).getDate().getTime())/1000;
+        int timePeriod = (int)  (data.get(data.size()-1).getDate().getTime()/1000 -  data.get(0).getDate().getTime()/1000) / data.size();
 
         int k = 0;
-        for (long i = now.getEpochSecond(); i < TimeUnit.DAYS.toSeconds(untilDays); i+=timePeriod) {
+        for (long i = now.getEpochSecond(); i < now.plusSeconds(TimeUnit.DAYS.toSeconds(untilDays)).getEpochSecond(); i+=timePeriod) {
             k++;
+            long kills = stats.getKills() + (k * avgKills);
+            long deaths = (long) (stats.getDeaths() + (k * avgKills) / avgKD);
 
-            data.add(new KnockPvPAnalyseEntity(
+            prognosis.add(new KnockPvPAnalyseEntity(
                     Date.from(Instant.ofEpochSecond(i)),
-                    stats.getKills() + (k * avgKills),
-                    ((float) stats.getKills() / stats.getDeaths()) + (k * avgKD)
+                    kills,
+                    (float) kills / deaths
             ));
         }
 
-        return data;
+        return prognosis;
     }
 
-    public void createKDStatsChart(List<KnockPvPAnalyseEntity> data, SeriesType type) {
+    public void createKnockPvPStatsChart(List<KnockPvPAnalyseEntity> data, StatsType type, String fileName) {
         final XYChart chart = new XYChartBuilder()
                 .width(700)
                 .height(600)
@@ -122,7 +141,7 @@ public class KnockPvPAnalyser {
         );
 
         try {
-            BitmapEncoder.saveBitmapWithDPI(chart, "./" + player.getName(), BitmapEncoder.BitmapFormat.PNG, 300);
+            BitmapEncoder.saveBitmapWithDPI(chart, "./" + fileName, BitmapEncoder.BitmapFormat.PNG, 300);
         } catch (IOException e) {
             log.error("Could not create image from chart", e);
         }
